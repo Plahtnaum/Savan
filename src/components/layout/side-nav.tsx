@@ -17,15 +17,15 @@ import {
 } from 'lucide-react'
 
 const navItems = [
-    { icon: Home, label: 'Home', href: '/' },
-    { icon: UtensilsCrossed, label: 'Explore Menu', href: '/menu' },
+    { icon: Home, label: 'At Home', href: '/' },
+    { icon: UtensilsCrossed, label: 'The Menu', href: '/menu' },
     { icon: Heart, label: 'Favorites', href: '/favorites' },
-    { icon: History, label: 'Orders', href: '/history' },
+    { icon: History, label: 'Your Journey', href: '/history' },
 ]
 
 const secondaryItems = [
     { icon: Settings, label: 'Settings', href: '/settings' },
-    { icon: HelpCircle, label: 'Support', href: '/support' },
+    { icon: HelpCircle, label: 'The Concierge', href: '/support' },
 ]
 
 interface SideNavProps {

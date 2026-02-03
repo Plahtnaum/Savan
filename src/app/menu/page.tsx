@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { CATEGORIES, MENU_ITEMS } from '@/lib/menu-data'
 import { useState, Suspense } from 'react'
-import { Search, SlidersHorizontal, ChevronLeft, Filter, X } from 'lucide-react'
+import { Search, SlidersHorizontal, ChevronLeft, Filter, X, ChefHat } from 'lucide-react'
 import Link from 'next/link'
 
 function MenuContent() {
@@ -33,8 +33,8 @@ function MenuContent() {
                 <aside className="hidden lg:block w-72 shrink-0 space-y-12 sticky top-24 h-fit">
                     <div>
                         <h3 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-2">
-                            <Filter className="w-5 h-5 text-[#E67E22]" />
-                            Cuisine Types
+                            <ChefHat className="w-5 h-5 text-[#E67E22]" />
+                            The Kitchen
                         </h3>
                         <div className="space-y-2">
                             {CATEGORIES.map((cat) => (
@@ -72,10 +72,10 @@ function MenuContent() {
                     <div className="flex flex-col gap-8 mb-16">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 tracking-tighter">
-                                    EXPLORE <span className="text-[#E67E22]">MENU</span>
+                                <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-gray-900 tracking-tighter uppercase">
+                                    Discover <span className="text-[#E67E22]">Flavors</span>
                                 </h1>
-                                <p className="text-gray-400 font-bold mt-2">Discover the bold flavors of the heritage.</p>
+                                <p className="text-gray-400 font-bold mt-2">Karibu! Experience the essence of Kenyan culinary heritage.</p>
                             </div>
                             <div className="bg-gray-100 p-3 rounded-2xl lg:hidden">
                                 <SlidersHorizontal className="w-6 h-6 text-gray-600" />
@@ -150,10 +150,10 @@ function MenuContent() {
                                 <div className="absolute inset-0 bg-[#E67E22]/5 animate-pulse" />
                             </div>
                             <h3 className="text-2xl font-black text-gray-900 mb-2 tracking-tight">
-                                Deepest Apologies
+                                A Quiet Moment
                             </h3>
-                            <p className="text-gray-400 mb-10 max-w-sm mx-auto font-medium">
-                                We couldn't find any dishes matching your current selection. Perhaps try an alternative?
+                            <p className="text-gray-400 mb-10 max-w-sm mx-auto font-medium italic">
+                                We couldn't find any dishes matching your palette in this selection. Perhaps our chefs can tempt you with something else?
                             </p>
                             <Button
                                 onClick={() => {

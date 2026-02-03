@@ -55,11 +55,11 @@ const FEATURED_ITEMS = [
 
 
 const CATEGORIES = [
-  { name: 'All Day', icon: '🌍', type: 'all' },
-  { name: 'Breakfast', icon: '🍳', type: 'breakfast' },
-  { name: 'Lunch', icon: '🍲', type: 'lunch' },
-  { name: 'Main Dish', icon: '🍗', type: 'main' },
-  { name: 'Desserts', icon: '🍰', type: 'dessert' }
+  { name: 'All Day', icon: Globe, type: 'all' },
+  { name: 'Breakfast', icon: Coffee, type: 'breakfast' },
+  { name: 'Lunch', icon: Soup, type: 'lunch' },
+  { name: 'Main Dish', icon: Utensils, type: 'main' },
+  { name: 'Desserts', icon: CupSoda, type: 'dessert' }
 ]
 
 export default function HomePage() {
@@ -71,100 +71,103 @@ export default function HomePage() {
       <Header />
 
       <main className="pb-32">
-        {/* Adaptive Hero Section - Cinematic Layout with Dynamic Spotlight */}
-        <section className="relative h-[65vh] lg:h-[80vh] w-full overflow-hidden">
+        {/* Adaptive Hero Section - Cinematic & Kenyan Focused */}
+        <section className="relative h-[65vh] lg:h-[85vh] w-full overflow-hidden">
           <div className="absolute inset-0">
             <img
               src={meal.type === 'breakfast'
                 ? "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=2400"
                 : meal.type === 'lunch'
-                  ? "https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=2400"
-                  : "https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?w=2400"
+                  ? "https://images.unsplash.com/photo-1627042633145-b78996320a9a?w=2400" // Kenyan Pilau style
+                  : "https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?w=2400" // Nyama Choma vibe
               }
               className="w-full h-full object-cover scale-105"
-              alt="Cinematic African Dining"
+              alt="Authentic Kenyan Culinary Experience"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent lg:via-black/20"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/50 to-transparent lg:via-black/30"></div>
           </div>
 
-          <div className="relative z-10 h-full container max-w-[1440px] px-4 sm:px-8 flex items-center">
-            <div className="max-w-4xl text-left lg:pl-16">
-              <div className="inline-flex items-center gap-3 bg-[#E67E22] px-5 py-2.5 rounded-full mb-10 animate-premium-fade shadow-2xl shadow-[#E67E22]/20">
-                <Sparkles className="w-5 h-5 text-white" />
-                <span className="text-white text-[11px] font-black uppercase tracking-[0.3em]">{meal.greeting} • Spotlight</span>
+          <div className="relative z-10 h-full container max-w-[1440px] px-6 sm:px-12 flex items-center">
+            <div className="max-w-4xl text-left">
+              <div className="inline-flex items-center gap-3 bg-[#E67E22] px-6 py-3 rounded-full mb-10 animate-premium-fade shadow-2xl shadow-[#E67E22]/30">
+                <ChefHat className="w-5 h-5 text-white" />
+                <span className="text-white text-[11px] font-black uppercase tracking-[0.4em]">{meal.greeting}</span>
               </div>
 
-              <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-white mb-10 leading-[0.85] tracking-tighter drop-shadow-2xl">
-                {meal.type === 'breakfast' ? 'RE-AWAKEN' : meal.type === 'lunch' ? 'FUEL THE' : 'CELEBRATE'}<br />
-                <span className="text-[#E67E22] inline-block mt-2">YOUR SOUL.</span>
+              <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-black text-white mb-10 leading-[0.8] tracking-tighter drop-shadow-2xl">
+                FEAST ON<br />
+                <span className="text-[#E67E22] inline-block mt-4">HERITAGE.</span>
               </h1>
 
-              <p className="text-xl md:text-2xl text-white/90 font-medium max-w-2xl mb-14 leading-relaxed tracking-tight drop-shadow-lg">
-                {meal.description} Crafted with authentic African heritage and delivered with modern precision.
+              <p className="text-xl md:text-3xl text-white/95 font-medium max-w-2xl mb-14 leading-relaxed tracking-tight drop-shadow-xl">
+                {meal.description} From the Highland farms to the Swahili coast, delivered with precision and heart.
               </p>
 
-              <div className="flex flex-wrap gap-8 items-center">
+              <div className="flex flex-wrap gap-10 items-center">
                 <Link href="/menu">
-                  <Button size="lg" className="bg-[#E67E22] hover:bg-white hover:text-black text-white px-14 h-20 text-xl font-black rounded-3xl shadow-[0_20px_50px_rgba(230,126,34,0.3)] active:scale-95 transition-all duration-500 uppercase tracking-widest border-none">
-                    Explore Menu
+                  <Button size="lg" className="bg-[#E67E22] hover:bg-white hover:text-black text-white px-16 h-24 text-2xl font-black rounded-[2rem] shadow-[0_30px_60px_rgba(230,126,34,0.4)] active:scale-95 transition-all duration-500 uppercase tracking-[0.2em] border-none">
+                    View Menu
                   </Button>
                 </Link>
-                <button className="flex items-center gap-6 group">
-                  <div className="w-20 h-20 rounded-full border-2 border-white/30 flex items-center justify-center text-white bg-white/5 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all duration-500 shadow-2xl">
-                    <Play className="w-6 h-6 fill-current" />
-                  </div>
-                  <span className="text-white font-black uppercase tracking-[0.2em] text-xs transition-colors group-hover:text-[#E67E22]">Watch Our Story</span>
-                </button>
+                <div className="flex items-center gap-4 text-white/60">
+                  <HeartHandshake className="w-8 h-8 text-[#E67E22]" />
+                  <span className="text-sm font-black uppercase tracking-widest leading-tight">Crafted with <br /> Kenyan Hospitality</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Scroll Indicator - Desktop Only */}
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-4 text-white/30">
-            <div className="w-0.5 h-12 bg-gradient-to-b from-white to-transparent"></div>
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] [writing-mode:vertical-lr]">Scroll</span>
+          {/* Scroll Indicator */}
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-4 text-white/40">
+            <span className="text-[10px] font-black uppercase tracking-[0.5em] [writing-mode:vertical-lr] mb-2">Scroll</span>
+            <div className="w-[1px] h-16 bg-gradient-to-b from-white to-transparent"></div>
           </div>
         </section>
 
-        {/* Categories Section - High-Fidelity Categorization Hub */}
-        <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-20">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-            <div>
-              <p className="text-[#E67E22] text-xs font-black uppercase tracking-widest mb-2">Refined Discovery</p>
-              <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter">Categorization Hub</h2>
+        {/* Categories Section - Flavors of Kenya */}
+        <section className="container max-w-[1440px] mx-auto px-6 sm:px-12 py-32">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+            <div className="max-w-xl">
+              <p className="text-[#E67E22] text-xs font-black uppercase tracking-[0.4em] mb-4">Discover your palette</p>
+              <h2 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tighter leading-none mb-6">Flavors of Kenya</h2>
+              <p className="text-gray-400 font-medium text-lg italic">Explore a curated journey through our regional specialties and timeless classics.</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
             {CATEGORIES.map((cat) => {
               const isActive = activeCategory === cat.type
+              const Icon = cat.icon
               return (
                 <button
                   key={cat.name}
                   onClick={() => setActiveCategory(cat.type)}
                   className={cn(
-                    "group p-10 rounded-[3rem] transition-all duration-500 flex flex-col items-center text-center relative overflow-hidden border",
+                    "group p-12 rounded-[4rem] transition-all duration-700 flex flex-col items-center text-center relative overflow-hidden border",
                     isActive
-                      ? "bg-gray-900 border-gray-900 text-white shadow-2xl shadow-gray-200 -translate-y-2"
-                      : "bg-white border-gray-100 text-gray-900 hover:border-[#E67E22]/30 hover:shadow-xl"
+                      ? "bg-gray-900 border-gray-900 text-white shadow-[0_40px_80px_rgba(0,0,0,0.15)] -translate-y-4"
+                      : "bg-white border-gray-100 text-gray-900 hover:border-[#E67E22]/30 hover:shadow-2xl"
                   )}
                 >
                   <div className={cn(
-                    "text-5xl mb-6 transform transition-transform duration-500",
-                    isActive ? "scale-110" : "group-hover:scale-110 group-hover:rotate-6"
+                    "w-20 h-20 rounded-[2rem] flex items-center justify-center mb-8 transition-all duration-700",
+                    isActive ? "bg-[#E67E22] scale-110 rotate-6" : "bg-gray-50 group-hover:bg-[#E67E22]/5 group-hover:scale-110"
                   )}>
-                    {cat.icon}
+                    <Icon className={cn(
+                      "w-10 h-10 transition-colors duration-700",
+                      isActive ? "text-white" : "text-gray-400 group-hover:text-[#E67E22]"
+                    )} />
                   </div>
-                  <h3 className="font-black text-lg mb-1 tracking-tight">{cat.name}</h3>
+                  <h3 className="font-black text-xl mb-2 tracking-tight">{cat.name}</h3>
                   <p className={cn(
-                    "text-[10px] font-black uppercase tracking-widest",
-                    isActive ? "text-[#E67E22]" : "text-gray-400"
+                    "text-[10px] font-black uppercase tracking-[0.3em]",
+                    isActive ? "text-[#E67E22]" : "text-gray-300"
                   )}>
-                    {isActive ? 'Currently Active' : 'Explore All'}
+                    {isActive ? 'Taste Now' : 'Explore'}
                   </p>
 
                   {isActive && (
-                    <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-[#E67E22] animate-pulse" />
+                    <div className="absolute top-8 right-8 w-3 h-3 rounded-full bg-[#E67E22] animate-ping" />
                   )}
                 </button>
               )
@@ -181,8 +184,8 @@ export default function HomePage() {
                   <TrendingUp className="w-6 h-6" />
                 </div>
                 <div>
-                  <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Signature Dishes</h2>
-                  <p className="text-gray-400 font-bold text-sm">Our chef's highly recommended selections</p>
+                  <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tighter">Chef's Masterpieces</h2>
+                  <p className="text-gray-400 font-bold text-sm">Hand-picked selections that define our culinary soul</p>
                 </div>
               </div>
               <Link href="/menu" className="hidden sm:flex items-center gap-3 bg-white px-6 py-3 rounded-2xl border border-gray-100 font-black text-xs text-gray-900 shadow-sm hover:shadow-md transition-all uppercase tracking-widest">
@@ -213,17 +216,17 @@ export default function HomePage() {
 
             <div className="relative z-10 grid lg:grid-cols-2 gap-16 items-center">
               <div className="text-center lg:text-left">
-                <p className="text-[#E67E22] text-xs font-black uppercase tracking-[0.3em] mb-4">Join the community</p>
-                <h2 className="text-4xl md:text-6xl font-black text-white mb-8 leading-tight tracking-tighter">
-                  Every Meal Counts<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">Towards a Better You.</span>
+                <p className="text-[#E67E22] text-xs font-black uppercase tracking-[0.4em] mb-4">The Savan Family</p>
+                <h2 className="text-4xl md:text-7xl font-black text-white mb-8 leading-tight tracking-tighter">
+                  Nourishing Your Spirit,<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">One Plate at a Time.</span>
                 </h2>
-                <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-                  <Button size="lg" className="bg-white text-black hover:bg-gray-100 h-16 px-12 rounded-2xl font-black text-lg transition-all active:scale-95">
-                    Join Savan Rewards
+                <div className="flex flex-col sm:flex-row gap-8 justify-center lg:justify-start">
+                  <Button size="lg" className="bg-[#E67E22] text-white hover:bg-white hover:text-black h-20 px-14 rounded-[2rem] font-black text-lg transition-all active:scale-95 shadow-2xl shadow-[#E67E22]/20 border-none uppercase tracking-widest">
+                    Join Our Inner Circle
                   </Button>
-                  <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 h-16 px-12 rounded-2xl font-black text-lg transition-all">
-                    Learn More
+                  <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 h-20 px-14 rounded-[2rem] font-black text-lg transition-all uppercase tracking-widest">
+                    Our Heritage
                   </Button>
                 </div>
               </div>
@@ -276,8 +279,8 @@ export default function HomePage() {
               <h5 className="font-black text-gray-900 uppercase tracking-widest text-xs mb-8">Navigation</h5>
               <ul className="space-y-4 text-gray-400 font-bold text-sm">
                 <li><Link href="/menu" className="hover:text-gray-900 transition-colors">Digital Menu</Link></li>
-                <li><Link href="/track" className="hover:text-gray-900 transition-colors">Track Order</Link></li>
-                <li><Link href="/locations" className="hover:text-gray-900 transition-colors">Our Hubs</Link></li>
+                <li><Link href="/order/tracking" className="hover:text-gray-900 transition-colors">Track Your Feast</Link></li>
+                <li><Link href="/locations" className="hover:text-gray-900 transition-colors">Our Kitchen Hubs</Link></li>
               </ul>
             </div>
 

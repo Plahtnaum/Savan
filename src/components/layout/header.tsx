@@ -16,9 +16,9 @@ export function Header() {
     const [isProfileOpen, setIsProfileOpen] = useState(false)
 
     const navLinks = [
-        { label: 'Explore', href: '/menu', icon: UtensilsCrossed },
+        { label: 'The Menu', href: '/menu', icon: UtensilsCrossed },
         { label: 'Favorites', href: '/favorites', icon: Heart },
-        { label: 'My Orders', href: '/history', icon: History },
+        { label: 'Track Feast', href: '/order/tracking', icon: History },
     ]
 
     return (
@@ -68,7 +68,7 @@ export function Header() {
                     {/* Right Side Actions */}
                     <div className="flex items-center gap-3 sm:gap-6">
                         <div className="hidden md:flex items-center gap-8 mr-4 border-r border-gray-100 pr-8">
-                            <Link href="/support" className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-900 transition-colors">Support</Link>
+                            <Link href="/support" className="text-[10px] font-black uppercase tracking-widest text-[#E67E22] hover:text-gray-900 transition-colors">Concierge</Link>
                         </div>
 
                         {/* Cart */}
@@ -104,8 +104,8 @@ export function Header() {
                                 isProfileOpen ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95 pointer-events-none"
                             )}>
                                 <div className="px-6 py-4 border-b border-gray-50 mb-2">
-                                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest leading-none mb-2">Authenticated as</p>
-                                    <p className="text-sm font-black text-gray-900">Guest Explorer</p>
+                                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest leading-none mb-2">Karibu, Explorer</p>
+                                    <p className="text-sm font-black text-gray-900">Guest Guest</p>
                                 </div>
                                 <div className="px-2">
                                     {[

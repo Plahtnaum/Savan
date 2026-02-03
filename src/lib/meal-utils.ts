@@ -13,8 +13,8 @@ export function getMealContext(): MealContext {
     if (hour >= 6 && hour < 11) {
         return {
             type: 'breakfast',
-            greeting: 'Good Morning',
-            description: 'Start your day with the vibrant energy of the Savannah.',
+            greeting: 'Karibu! A Fresh Start',
+            description: 'Awaken your palette with the authentic flavors of a Kenyan morning—from spiced tea to artisanal mahamri.',
             accentColor: '#E67E22'
         }
     }
@@ -22,16 +22,16 @@ export function getMealContext(): MealContext {
     if (hour >= 11 && hour < 17) {
         return {
             type: 'lunch',
-            greeting: 'Midday Energy',
-            description: 'Fuel your afternoon with bold, artisanal African mains.',
+            greeting: 'Jambo! Midday Feast',
+            description: 'The sun is high, and our kitchen is crafting the perfect Kenyan main—fresh, bold, and delivered with care.',
             accentColor: '#E67E22'
         }
     }
 
     return {
         type: 'dinner',
-        greeting: 'Cozy Evening',
-        description: 'Wind down with our most prized slow-cooked platters.',
+        greeting: 'Evening Warmth',
+        description: 'Wind down with our most prized slow-cooked heritage dishes. A soulful end to your day, prepared with heart.',
         accentColor: '#E67E22'
     }
 }

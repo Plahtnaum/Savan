@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Header } from '@/components/layout/header'
 import { Button } from '@/components/ui/button'
-import { CheckCircle2, Phone, MapPinOff, ArrowLeft, Clock, Package, Bike, CheckCircle } from 'lucide-react'
+import { CheckCircle2, Phone, MapPinOff, ArrowLeft, Clock, Package, Bike, CheckCircle, ChefHat, Box, Info } from 'lucide-react'
 import { useOrderStore } from '@/lib/order-store'
 import { cn } from '@/lib/utils'
 
@@ -38,10 +38,10 @@ export default function OrderTrackingPage() {
     }
 
     const steps = [
-        { status: 'Placed', label: 'Order Placed', time: '12:30 PM', icon: <Package className="w-5 h-5" /> },
-        { status: 'Preparing', label: 'Preparing', time: '12:35 PM', icon: <span className="text-xl">👨‍🍳</span> },
-        { status: 'Out for Delivery', label: 'Shipped', time: '12:50 PM', icon: <Bike className="w-5 h-5" /> },
-        { status: 'Delivered', label: 'Delivered', time: '1:10 PM', icon: <CheckCircle className="w-5 h-5" /> },
+        { status: 'Placed', label: 'Feast Requested', time: '12:30 PM', icon: <Package className="w-5 h-5" /> },
+        { status: 'Preparing', label: 'Crafting Heritage', time: '12:35 PM', icon: <ChefHat className="w-5 h-5" /> },
+        { status: 'Out for Delivery', label: 'On Route to You', time: '12:50 PM', icon: <Bike className="w-5 h-5" /> },
+        { status: 'Delivered', label: 'Arrived at Table', time: '1:10 PM', icon: <CheckCircle className="w-5 h-5" /> },
     ]
 
     const statusMap: Record<string, number> = {
@@ -61,10 +61,10 @@ export default function OrderTrackingPage() {
                 {/* Back Link */}
                 <button
                     onClick={() => router.push('/')}
-                    className="flex items-center gap-2 text-gray-500 font-bold text-sm mb-8 hover:text-gray-900 transition-colors"
+                    className="flex items-center gap-2 text-[#E67E22] font-black text-[10px] uppercase tracking-[0.3em] mb-12 hover:translate-x-[-4px] transition-transform"
                 >
                     <ArrowLeft className="w-4 h-4" />
-                    Order Updates
+                    Back to the Soul
                 </button>
 
                 {/* Main Tracking Card - Matching Sample 3 */}
@@ -76,12 +76,12 @@ export default function OrderTrackingPage() {
                     <div className="relative z-10">
                         <div className="flex justify-between items-start mb-10">
                             <div>
-                                <p className="text-white/70 text-sm font-bold uppercase tracking-wider mb-1">Order Status</p>
-                                <h2 className="text-3xl font-black">#{order.orderNumber}</h2>
+                                <p className="text-white/70 text-[10px] font-black uppercase tracking-[0.3em] mb-2">Heritage Path</p>
+                                <h2 className="text-5xl font-black tracking-tighter">#{order.orderNumber}</h2>
                             </div>
-                            <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl text-right">
-                                <p className="text-white/70 text-[10px] font-bold uppercase tracking-tighter">Est. Arrival</p>
-                                <p className="text-xl font-black">12:30 PM</p>
+                            <div className="bg-white/20 backdrop-blur-md px-6 py-4 rounded-[1.5rem] text-right">
+                                <p className="text-white/70 text-[9px] font-black uppercase tracking-widest mb-1">Expected at Table</p>
+                                <p className="text-2xl font-black">12:30 PM</p>
                             </div>
                         </div>
 
@@ -120,8 +120,8 @@ export default function OrderTrackingPage() {
                                                 {isActive ? step.time : 'Waiting...'}
                                             </p>
                                             {isCurrent && (
-                                                <div className="mt-4 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest inline-block border border-white/10 animate-pulse">
-                                                    Currently Updating
+                                                <div className="mt-4 bg-white/10 backdrop-blur-sm px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] inline-block border border-white/20 animate-pulse">
+                                                    Kitchen is busy...
                                                 </div>
                                             )}
                                         </div>
@@ -135,13 +135,13 @@ export default function OrderTrackingPage() {
                 {/* Tracking Action Section */}
                 <div className="space-y-4">
                     <div className="flex items-center justify-between p-6 bg-gray-50 rounded-3xl border border-gray-100 shadow-sm">
-                        <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-sm">
-                                📦
+                        <div className="flex items-center gap-6">
+                            <div className="w-16 h-16 bg-white rounded-[1.5rem] flex items-center justify-center text-[#E67E22] shadow-sm">
+                                <Box className="w-8 h-8" />
                             </div>
                             <div>
-                                <h4 className="font-bold text-gray-900">Track on map</h4>
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Live Tracking</p>
+                                <h4 className="font-black text-xl text-gray-900">Map Your Feast</h4>
+                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Live Delivery Matrix</p>
                             </div>
                         </div>
                         <Button variant="ghost" size="icon" className="rounded-2xl w-12 h-12 bg-white shadow-sm border border-gray-100 hover:bg-[#E67E22]/10 group">
@@ -149,14 +149,14 @@ export default function OrderTrackingPage() {
                         </Button>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4">
-                        <Button className="flex-1 h-16 rounded-[1.5rem] bg-gray-900 hover:bg-black text-white font-bold flex items-center justify-center gap-3">
-                            <Phone className="w-5 h-5" />
-                            Call Rider
+                    <div className="flex flex-col sm:flex-row gap-6">
+                        <Button className="flex-1 h-20 rounded-[2rem] bg-gray-900 hover:bg-black text-white font-black uppercase tracking-widest text-xs flex items-center justify-center gap-4 shadow-xl shadow-gray-200">
+                            <Phone className="w-5 h-5 text-[#E67E22]" />
+                            Concierge Access
                         </Button>
-                        <Button variant="outline" className="flex-1 h-16 rounded-[1.5rem] border-2 border-gray-100 hover:bg-gray-50 font-bold flex items-center justify-center gap-3 text-gray-700">
-                            <MapPinOff className="w-5 h-5 text-gray-400" />
-                            Full Details
+                        <Button variant="outline" className="flex-1 h-20 rounded-[2rem] border-2 border-gray-100 hover:bg-gray-50 font-black uppercase tracking-widest text-xs flex items-center justify-center gap-4 text-gray-700">
+                            <Info className="w-5 h-5 text-gray-400" />
+                            Feast Details
                         </Button>
                     </div>
                 </div>

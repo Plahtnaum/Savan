@@ -76,13 +76,13 @@ export default function CheckoutPage() {
                 <header className="mb-16">
                     <button
                         onClick={() => router.back()}
-                        className="flex items-center gap-2 text-gray-400 hover:text-gray-900 transition-colors font-black text-[10px] uppercase tracking-[0.2em] mb-4"
+                        className="flex items-center gap-2 text-[#E67E22] hover:text-gray-900 transition-colors font-black text-[10px] uppercase tracking-[0.3em] mb-6"
                     >
                         <ChevronLeft className="w-4 h-4" />
-                        Back to Cart
+                        Back to Selection
                     </button>
-                    <h1 className="text-5xl lg:text-7xl font-black text-gray-900 tracking-tighter">
-                        SECURE <span className="text-[#E67E22]">CHECKOUT</span>
+                    <h1 className="text-5xl lg:text-7xl font-black text-gray-900 tracking-tighter uppercase">
+                        Finalize <span className="text-[#E67E22]">Your Feast</span>
                     </h1>
                 </header>
 
@@ -92,10 +92,10 @@ export default function CheckoutPage() {
                         {/* Delivery Section */}
                         <section className="space-y-10">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-gray-900 rounded-2xl flex items-center justify-center text-white">
-                                    <MapPin className="w-6 h-6" />
+                                <div className="w-12 h-12 bg-[#E67E22]/10 rounded-2xl flex items-center justify-center text-[#E67E22]">
+                                    <Truck className="w-6 h-6" />
                                 </div>
-                                <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">Delivery Logistics</h2>
+                                <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">Hand-Delivered With Care</h2>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -129,10 +129,10 @@ export default function CheckoutPage() {
                         {/* Payment Section */}
                         <section className="space-y-10">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-gray-900 rounded-2xl flex items-center justify-center text-white">
+                                <div className="w-12 h-12 bg-[#E67E22]/10 rounded-2xl flex items-center justify-center text-[#E67E22]">
                                     <CreditCard className="w-6 h-6" />
                                 </div>
-                                <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">Settlement Method</h2>
+                                <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">The Exchange</h2>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -207,15 +207,18 @@ export default function CheckoutPage() {
                                     </div>
 
                                     <Button
-                                        className="w-full h-20 rounded-2xl bg-[#E67E22] hover:bg-white hover:text-black text-lg font-black transition-all flex items-center justify-center gap-4 uppercase tracking-widest shadow-2xl shadow-[#E67E22]/20 active:scale-95 disabled:bg-white/10 disabled:text-white/20 group"
+                                        className="w-full h-24 rounded-[2rem] bg-[#E67E22] hover:bg-white hover:text-black text-xl font-black transition-all flex items-center justify-center gap-4 uppercase tracking-[0.2em] shadow-[0_30px_60px_rgba(230,126,34,0.3)] active:scale-95 disabled:bg-white/10 disabled:text-white/20 group border-none"
                                         onClick={handlePlaceOrder}
                                         disabled={loading}
                                     >
                                         {loading ? (
-                                            <div className="w-6 h-6 border-3 border-current border-t-transparent rounded-full animate-spin" />
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-6 h-6 border-3 border-current border-t-transparent rounded-full animate-spin" />
+                                                <span className="text-[10px] font-black uppercase tracking-widest">Awaiting M-Pesa...</span>
+                                            </div>
                                         ) : (
                                             <>
-                                                <span>Execute Order</span>
+                                                <span>Begin Your Journey</span>
                                                 <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                                             </>
                                         )}
