@@ -3,10 +3,9 @@
 import { useState, Suspense } from 'react'
 import { Header } from '@/components/layout/header'
 import { BottomNav } from '@/components/layout/bottom-nav'
-import { Card, CardContent } from '@/components/ui/card'
+import { MenuItemCard } from '@/components/menu-item-card'
 import { Button } from '@/components/ui/button'
-import { Filter } from 'lucide-react'
-import Link from 'next/link'
+import { Filter, SlidersHorizontal } from 'lucide-react'
 import { CATEGORIES, MENU_ITEMS } from '@/lib/menu-data'
 import { useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -22,25 +21,28 @@ function MenuContent() {
 
     return (
         <>
-            <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold font-display">Our Menu</h1>
-                <Button variant="outline" size="sm" className="gap-2">
-                    <Filter className="w-4 h-4" />
-                    Filter
+            <div className="flex items-center justify-between mb-6">
+                <div>
+                    <h1 className="text-2xl md:text-3xl font-bold font-display">Our Menu</h1>
+                    <p className="text-sm text-muted-foreground mt-1">{filteredItems.length} dishes available</p>
+                </div>
+                <Button variant="outline" size="sm" className="gap-2 rounded-lg">
+                    <SlidersHorizontal className="w-4 h-4" />
+                    <span className="hidden sm:inline">Filters</span>
                 </Button>
             </div>
 
             {/* Category Filter Chips */}
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sticky top-16 bg-background/95 z-40 py-2 backdrop-blur">
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 sticky top-16 bg-gray-50 z-40 py-3 -mt-3">
                 {CATEGORIES.map((cat) => (
                     <button
                         key={cat}
                         onClick={() => setSelectedCategory(cat)}
                         className={cn(
-                            "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors border",
+                            "px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all shadow-sm",
                             selectedCategory === cat
-                                ? "bg-primary text-primary-foreground border-primary"
-                                : "bg-background hover:bg-muted border-input"
+                                ? "bg-primary text-white shadow-md scale-105"
+                                : "bg-white hover:bg-gray-100 text-gray-700 border border-gray-200"
                         )}
                     >
                         {cat}
@@ -48,47 +50,37 @@ function MenuContent() {
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mt-6">
                 {filteredItems.map((item) => (
-                    <Link key={item.id} href={`/dish/${item.slug}`}>
-                        <Card className="overflow-hidden hover:shadow-md transition-shadow h-full flex flex-row sm:flex-col h-[140px] sm:h-auto">
-                            {/* Mobile: Horizontal layout */}
-                            <div className="w-[120px] sm:w-full sm:aspect-[4/3] relative bg-muted shrink-0">
-                                <div className="absolute inset-0 flex items-center justify-center bg-gray-200 text-gray-400 text-xs">
-                                    {item.name}
-                                </div>
-                            </div>
-
-                            <CardContent className="p-4 flex flex-col justify-between flex-1">
-                                <div>
-                                    <div className="flex justify-between items-start">
-                                        <h3 className="font-semibold font-display line-clamp-1">{item.name}</h3>
-                                    </div>
-                                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1 mb-2">{item.description}</p>
-                                </div>
-
-                                <div className="flex items-center justify-between mt-auto">
-                                    <span className="font-bold text-primary">KES {item.price}</span>
-                                    <Button size="sm" variant="secondary" className="h-8 px-3">
-                                        Add
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </Link>
+                    <MenuItemCard
+                        key={item.id}
+                        {...item}
+                        variant="vertical"
+                    />
                 ))}
             </div>
+
+            {filteredItems.length === 0 && (
+                <div className="text-center py-16">
+                    <p className="text-muted-foreground">No items found in this category.</p>
+                </div>
+            )}
         </>
     )
 }
 
 export default function MenuPage() {
     return (
-        <div className="min-h-screen bg-muted/20 pb-20">
+        <div className="min-h-screen bg-gray-50 pb-20">
             <Header />
 
-            <main className="container py-6 space-y-6">
-                <Suspense fallback={<div className="p-4 text-center">Loading menu...</div>}>
+            <main className="container py-6 space-y-6 max-w-7xl mx-auto">
+                <Suspense fallback={
+                    <div className="p-8 text-center">
+                        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+                        <p className="mt-4 text-muted-foreground">Loading menu...</p>
+                    </div>
+                }>
                     <MenuContent />
                 </Suspense>
             </main>

@@ -52,7 +52,7 @@
 
   --color-destructive: #E74C3C;
   --color-destructive-foreground: #FFFFFF;
-  
+
   --color-ring: var(--color-primary-500);
 
   /* Fonts */
@@ -94,7 +94,7 @@ body {
     margin: 0;
     size: auto;
   }
-  
+
   body {
     background: white;
     color: black;
@@ -107,4 +107,14 @@ body {
   .print-only {
     display: block !important;
   }
+}
+
+/* Utilities */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

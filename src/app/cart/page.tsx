@@ -4,10 +4,9 @@ import { Header } from '@/components/layout/header'
 import { BottomNav } from '@/components/layout/bottom-nav'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Minus, Plus, Trash2, ArrowLeft } from 'lucide-react'
+import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag } from 'lucide-react'
 import { useCartStore } from '@/lib/cart-store'
 import Link from 'next/link'
-import Image from 'next/image'
 
 export default function CartPage() {
     const { items, removeItem, updateQuantity, getCartTotal } = useCartStore()
@@ -16,18 +15,20 @@ export default function CartPage() {
 
     if (items.length === 0) {
         return (
-            <div className="min-h-screen bg-muted/20 flex flex-col">
+            <div className="min-h-screen bg-gray-50 flex flex-col">
                 <Header />
-                <main className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-4">
-                    <div className="w-40 h-40 bg-muted rounded-full flex items-center justify-center mb-4">
-                        <span className="text-4xl">🛒</span>
+                <main className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-6">
+                    <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mb-2">
+                        <ShoppingBag className="w-16 h-16 text-gray-400" />
                     </div>
-                    <h2 className="text-2xl font-bold">Your cart is empty</h2>
-                    <p className="text-muted-foreground max-w-xs mx-auto">
-                        Looks like you haven't added any delicious food yet.
-                    </p>
+                    <div>
+                        <h2 className="text-2xl font-bold font-display mb-2">Your cart is empty</h2>
+                        <p className="text-muted-foreground max-w-xs mx-auto">
+                            Looks like you haven't added any delicious food yet.
+                        </p>
+                    </div>
                     <Link href="/menu">
-                        <Button size="lg" className="mt-4">Browse Menu</Button>
+                        <Button size="lg" className="mt-4 rounded-full px-8">Browse Menu</Button>
                     </Link>
                 </main>
                 <BottomNav />
@@ -36,54 +37,58 @@ export default function CartPage() {
     }
 
     return (
-        <div className="min-h-screen bg-muted/20 pb-32">
-            <div className="sticky top-0 z-10 bg-background border-b px-4 h-14 flex items-center">
+        <div className="min-h-screen bg-gray-50 pb-40">
+            <div className="sticky top-0 z-10 bg-white border-b px-4 h-14 flex items-center shadow-sm">
                 <Link href="/" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
                     <ArrowLeft className="w-4 h-4" />
                     Keep shopping
                 </Link>
-                <h1 className="absolute left-1/2 -translate-x-1/2 font-semibold">My Cart</h1>
+                <h1 className="absolute left-1/2 -translate-x-1/2 font-semibold font-display">My Cart ({items.length})</h1>
             </div>
 
-            <main className="container py-6 space-y-6">
-                <div className="space-y-4">
+            <main className="container py-6 space-y-6 max-w-2xl mx-auto">
+                <div className="space-y-3">
                     {items.map((item) => (
-                        <Card key={item.id} className="overflow-hidden">
-                            <CardContent className="p-3 flex gap-3">
-                                <div className="h-20 w-20 bg-muted rounded-md shrink-0 relative">
-                                    {/* Placeholder */}
+                        <Card key={item.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                            <CardContent className="p-4 flex gap-4">
+                                <div className="h-24 w-24 bg-gray-100 rounded-xl shrink-0 relative overflow-hidden">
+                                    <img
+                                        src={item.image}
+                                        alt={item.name}
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
-                                <div className="flex-1 flex flex-col justify-between">
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <h3 className="font-semibold text-sm line-clamp-1">{item.name}</h3>
-                                            {item.options && (
-                                                <p className="text-xs text-muted-foreground">
-                                                    {Object.values(item.options).filter(Boolean).join(', ')}
+                                <div className="flex-1 flex flex-col justify-between min-w-0">
+                                    <div className="flex justify-between items-start gap-4">
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="font-semibold text-base line-clamp-1 font-display">{item.name}</h3>
+                                            {item.options && Object.values(item.options).filter(Boolean).length > 0 && (
+                                                <p className="text-xs text-muted-foreground mt-1">
+                                                    {Object.values(item.options).filter(Boolean).join(' • ')}
                                                 </p>
                                             )}
                                         </div>
-                                        <p className="font-bold text-sm">KES {item.price * item.quantity}</p>
+                                        <p className="font-bold text-base font-display text-primary whitespace-nowrap">KES {item.price * item.quantity}</p>
                                     </div>
 
-                                    <div className="flex justify-between items-center mt-2">
-                                        <div className="flex items-center border rounded-md h-8">
+                                    <div className="flex justify-between items-center mt-3">
+                                        <div className="flex items-center border border-gray-200 rounded-lg h-9 bg-white shadow-sm">
                                             <button
-                                                className="px-2 h-full hover:bg-muted"
+                                                className="px-3 h-full hover:bg-gray-50 transition-colors rounded-l-lg"
                                                 onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
                                             >
-                                                <Minus className="w-3 h-3" />
+                                                <Minus className="w-3.5 h-3.5" />
                                             </button>
-                                            <span className="px-2 text-xs font-medium">{item.quantity}</span>
+                                            <span className="px-4 text-sm font-semibold border-x border-gray-200">{item.quantity}</span>
                                             <button
-                                                className="px-2 h-full hover:bg-muted"
+                                                className="px-3 h-full hover:bg-gray-50 transition-colors rounded-r-lg"
                                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                             >
-                                                <Plus className="w-3 h-3" />
+                                                <Plus className="w-3.5 h-3.5" />
                                             </button>
                                         </div>
                                         <button
-                                            className="p-2 text-muted-foreground hover:text-destructive"
+                                            className="p-2 text-muted-foreground hover:text-destructive hover:bg-red-50 rounded-lg transition-colors"
                                             onClick={() => removeItem(item.id)}
                                         >
                                             <Trash2 className="w-4 h-4" />
@@ -95,30 +100,35 @@ export default function CartPage() {
                     ))}
                 </div>
 
-                {/* Summary */}
-                <div className="space-y-3 pt-4">
-                    <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Subtotal</span>
-                        <span>KES {total}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Delivery Fee</span>
-                        <span>KES {deliveryFee}</span>
-                    </div>
-                    <div className="h-px bg-border my-2" />
-                    <div className="flex justify-between font-bold text-lg">
-                        <span>Total</span>
-                        <span className="text-primary">KES {total + deliveryFee}</span>
-                    </div>
-                </div>
+                {/* Summary Card */}
+                <Card className="shadow-md">
+                    <CardContent className="p-6 space-y-4">
+                        <h3 className="font-semibold text-lg font-display mb-4">Order Summary</h3>
+                        <div className="space-y-3">
+                            <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">Subtotal</span>
+                                <span className="font-medium">KES {total}</span>
+                            </div>
+                            <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">Delivery Fee</span>
+                                <span className="font-medium">KES {deliveryFee}</span>
+                            </div>
+                            <div className="h-px bg-gray-200" />
+                            <div className="flex justify-between font-bold text-lg pt-2">
+                                <span className="font-display">Total</span>
+                                <span className="text-primary font-display">KES {total + deliveryFee}</span>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </main>
 
             {/* Sticky Checkout Bar */}
-            <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 px-6 md:pb-6 pb-20 safe-area-bottom z-50">
-                <div className="container max-w-md mx-auto">
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 px-6 md:pb-6 pb-20 safe-area-bottom z-50 shadow-[0_-4px_12px_rgba(0,0,0,0.08)]">
+                <div className="container max-w-2xl mx-auto">
                     <Link href="/checkout">
-                        <Button size="lg" className="w-full text-base font-bold shadow-lg">
-                            Checkout • KES {total + deliveryFee}
+                        <Button size="lg" className="w-full text-base font-semibold shadow-lg hover:shadow-xl transition-shadow rounded-full h-14">
+                            Proceed to Checkout • KES {total + deliveryFee}
                         </Button>
                     </Link>
                 </div>
