@@ -126,7 +126,7 @@ export default function HomePage() {
         </section>
 
         {/* Categories Section - Flavors of Kenya */}
-        <section className="container max-w-[1440px] mx-auto px-6 sm:px-12 py-32">
+        <section className="container max-w-[1440px] mx-auto px-6 sm:px-12 py-20">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
             <div className="max-w-xl">
               <p className="text-[#E67E22] text-xs font-black uppercase tracking-[0.4em] mb-4">Discover your palette</p>
@@ -135,7 +135,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
             {CATEGORIES.map((cat) => {
               const isActive = activeCategory === cat.type
               const Icon = cat.icon
@@ -144,31 +144,29 @@ export default function HomePage() {
                   key={cat.name}
                   onClick={() => setActiveCategory(cat.type)}
                   className={cn(
-                    "group p-12 rounded-[4rem] transition-all duration-700 flex flex-col items-center text-center relative overflow-hidden border",
+                    "relative flex flex-col items-center justify-center gap-4 p-6 md:p-8 rounded-[2.5rem] transition-all duration-500 overflow-hidden group border",
                     isActive
-                      ? "bg-gray-900 border-gray-900 text-white shadow-[0_40px_80px_rgba(0,0,0,0.15)] -translate-y-4"
-                      : "bg-white border-gray-100 text-gray-900 hover:border-[#E67E22]/30 hover:shadow-2xl"
+                      ? "bg-gray-900 text-white shadow-xl scale-105 border-gray-900"
+                      : "bg-white border-gray-50 text-gray-400 hover:border-gray-200 hover:shadow-lg"
                   )}
                 >
                   <div className={cn(
-                    "w-20 h-20 rounded-[2rem] flex items-center justify-center mb-8 transition-all duration-700",
-                    isActive ? "bg-[#E67E22] scale-110 rotate-6" : "bg-gray-50 group-hover:bg-[#E67E22]/5 group-hover:scale-110"
+                    "w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center transition-all duration-500",
+                    isActive ? "bg-[#E67E22] text-white" : "bg-gray-50 text-gray-300 group-hover:bg-[#E67E22]/10 group-hover:text-[#E67E22]"
                   )}>
-                    <Icon className={cn(
-                      "w-10 h-10 transition-colors duration-700",
-                      isActive ? "text-white" : "text-gray-400 group-hover:text-[#E67E22]"
-                    )} />
+                    <Icon className="w-7 h-7 md:w-8 md:h-8" />
                   </div>
-                  <h3 className="font-black text-xl mb-2 tracking-tight">{cat.name}</h3>
-                  <p className={cn(
-                    "text-[10px] font-black uppercase tracking-[0.3em]",
-                    isActive ? "text-[#E67E22]" : "text-gray-300"
-                  )}>
-                    {isActive ? 'Taste Now' : 'Explore'}
-                  </p>
-
+                  <div className="text-center">
+                    <h3 className={cn(
+                      "font-black text-base md:text-lg mb-0.5 tracking-tight",
+                      isActive ? "text-white" : "text-gray-900"
+                    )}>{cat.name}</h3>
+                    <p className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] opacity-40">
+                      {isActive ? 'Taste Now' : 'Explore'}
+                    </p>
+                  </div>
                   {isActive && (
-                    <div className="absolute top-8 right-8 w-3 h-3 rounded-full bg-[#E67E22] animate-ping" />
+                    <div className="absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-[#E67E22] animate-pulse" />
                   )}
                 </button>
               )
@@ -204,49 +202,51 @@ export default function HomePage() {
         </section>
 
         {/* Cinematic CTA Section */}
-        <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-24">
-          <div className="bg-[#1A1A1A] rounded-[3rem] p-12 lg:p-24 relative overflow-hidden group">
-            <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden">
+        <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-20">
+          <div className="bg-[#111111] rounded-[2.5rem] p-10 lg:p-16 relative overflow-hidden group">
+            <div className="absolute inset-0 opacity-15 pointer-events-none overflow-hidden">
               <img
                 src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1600"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[10s]"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[10s]"
                 alt=""
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
             </div>
 
-            <div className="relative z-10 grid lg:grid-cols-2 gap-16 items-center">
+            <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
               <div className="text-center lg:text-left">
-                <p className="text-[#E67E22] text-xs font-black uppercase tracking-[0.4em] mb-4">The Savan Family</p>
-                <h2 className="text-4xl md:text-7xl font-black text-white mb-8 leading-tight tracking-tighter">
+                <p className="text-[#E67E22] text-[10px] font-black uppercase tracking-[0.4em] mb-4">The Savan Family</p>
+                <h2 className="text-3xl md:text-5xl font-black text-white mb-8 leading-tight tracking-tighter">
                   Nourishing Your Spirit,<br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">One Plate at a Time.</span>
                 </h2>
-                <div className="flex flex-col sm:flex-row gap-8 justify-center lg:justify-start">
-                  <Button size="lg" className="bg-[#E67E22] text-white hover:bg-white hover:text-black h-20 px-14 rounded-[2rem] font-black text-lg transition-all active:scale-95 shadow-2xl shadow-[#E67E22]/20 border-none uppercase tracking-widest">
+                <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
+                  <Button size="lg" className="bg-[#E67E22] text-white hover:bg-white hover:text-black h-14 md:h-16 px-10 rounded-2xl font-black text-sm md:text-base transition-all active:scale-95 shadow-xl shadow-[#E67E22]/10 border-none uppercase tracking-widest">
                     Join Our Inner Circle
                   </Button>
-                  <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 h-20 px-14 rounded-[2rem] font-black text-lg transition-all uppercase tracking-widest">
-                    Our Heritage
-                  </Button>
+                  <Link href="/support">
+                    <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 h-14 md:h-16 px-10 rounded-2xl font-black text-sm md:text-base transition-all uppercase tracking-widest w-full">
+                      Our Heritage
+                    </Button>
+                  </Link>
                 </div>
               </div>
 
               <div className="hidden lg:grid grid-cols-2 gap-6">
-                <div className="space-y-6 pt-12">
-                  <div className="h-64 rounded-3xl overflow-hidden shadow-2xl rotate-2">
+                <div className="space-y-4 pt-10">
+                  <div className="h-56 rounded-2xl overflow-hidden shadow-xl rotate-2">
                     <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400" className="w-full h-full object-cover" alt="" />
                   </div>
-                  <div className="h-48 rounded-3xl overflow-hidden shadow-2xl -rotate-2 bg-[#E67E22] flex items-center justify-center p-8 text-white">
-                    <p className="text-3xl font-black italic">500+ Active Members</p>
+                  <div className="h-40 rounded-2xl overflow-hidden shadow-xl -rotate-2 bg-[#E67E22] flex items-center justify-center p-6 text-white">
+                    <p className="text-xl font-black italic">500+ Active Members</p>
                   </div>
                 </div>
-                <div className="space-y-6">
-                  <div className="h-48 rounded-3xl overflow-hidden shadow-2xl -rotate-1 bg-white/5 backdrop-blur-md flex flex-col justify-end p-8 text-white border border-white/10">
-                    <p className="text-sm font-bold opacity-60">Customer Satisfaction</p>
-                    <p className="text-4xl font-black tracking-tighter">4.9/5 ★</p>
+                <div className="space-y-4">
+                  <div className="h-40 rounded-2xl overflow-hidden shadow-xl -rotate-1 bg-white/5 backdrop-blur-md flex flex-col justify-end p-6 text-white border border-white/10">
+                    <p className="text-[10px] font-bold opacity-60">Customer Satisfaction</p>
+                    <p className="text-2xl font-black tracking-tighter">4.9/5 ★</p>
                   </div>
-                  <div className="h-64 rounded-3xl overflow-hidden shadow-2xl rotate-3">
+                  <div className="h-56 rounded-2xl overflow-hidden shadow-xl rotate-3">
                     <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400" className="w-full h-full object-cover" alt="" />
                   </div>
                 </div>
