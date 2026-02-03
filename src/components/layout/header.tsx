@@ -58,7 +58,7 @@ export function Header() {
                         <div className="flex items-center gap-4 bg-gray-50 hover:bg-gray-100 px-5 py-2.5 rounded-full transition-all border border-gray-100 group-active:scale-95 shadow-sm">
                             <ShoppingBag className="h-5 w-5 text-gray-900 group-hover:rotate-6 transition-transform" />
                             <div className="hidden sm:block">
-                                <p className="text-[10px] font-black text-gray-900 leading-none">{itemCount} Items}</p>
+                                <p className="text-[10px] font-black text-gray-900 leading-none">{itemCount} Items</p>
                             </div>
                             {itemCount > 0 && (
                                 <Badge className="absolute -top-1 -right-1 h-5 min-w-5 flex items-center justify-center p-1 rounded-full bg-[#E67E22] text-white text-[9px] font-bold border-2 border-white">
