@@ -144,7 +144,7 @@ export default function DishDetailPage() {
                             <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.4em]">Investment</p>
                             <div className="flex items-baseline gap-3">
                                 <span className="text-6xl font-black text-[#E67E22] tracking-tighter">KES {item.price}</span>
-                                <span className="text-gray-400 font-bold text-lg italic">/ soul-portion</span>
+                                <span className="text-gray-400 font-bold text-lg italic">/ portion</span>
                             </div>
                         </div>
                         {cartItem && (
@@ -162,7 +162,7 @@ export default function DishDetailPage() {
                     <div className="space-y-8">
                         <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-[0.4em] flex items-center gap-3">
                             <div className="w-8 h-[1px] bg-[#E67E22]"></div>
-                            The Experience
+                            About This Dish
                         </h3>
                         <p className="text-gray-500 text-2xl font-bold leading-relaxed tracking-tight">
                             {item.description || "A masterful creation balancing tradition and contemporary culinary precision."}
@@ -200,7 +200,7 @@ export default function DishDetailPage() {
                         {item.options?.spiceLevels && (
                             <div className="space-y-8">
                                 <div className="flex items-center justify-between">
-                                    <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Spice Matrix</h4>
+                                    <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Heat Level</h4>
                                     <span className="text-[9px] font-black text-gray-300 uppercase tracking-[0.2em]">Adaptive</span>
                                 </div>
                                 <div className="grid grid-cols-1 gap-4">
