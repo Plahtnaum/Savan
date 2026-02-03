@@ -72,7 +72,7 @@ export default function HomePage() {
 
       <main className="pb-32">
         {/* Adaptive Hero Section - Cinematic & Kenyan Focused */}
-        <section className="relative h-[70vh] lg:h-[80vh] w-full overflow-hidden">
+        <section className="relative min-h-[calc(100vh-9rem)] lg:h-[80vh] w-full overflow-hidden flex flex-col justify-center">
           <div className="absolute inset-0">
             <img
               src={meal.type === 'breakfast'
@@ -87,14 +87,14 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/50 to-transparent lg:via-black/30"></div>
           </div>
 
-          <div className="relative z-10 h-full container max-w-[1440px] px-6 sm:px-12 flex items-center">
+          <div className="relative z-10 container max-w-[1440px] px-6 sm:px-12 py-12 md:py-0">
             <div className="max-w-4xl text-left">
-              <div className="inline-flex items-center gap-3 bg-[#E67E22] px-6 py-3 rounded-full mb-10 animate-premium-fade shadow-2xl shadow-[#E67E22]/30">
+              <div className="inline-flex items-center gap-3 bg-[#E67E22] px-6 py-3 rounded-full mb-8 md:mb-10 animate-premium-fade shadow-2xl shadow-[#E67E22]/30 mt-6 md:mt-0">
                 <ChefHat className="w-5 h-5 text-white" />
                 <span className="text-white text-[11px] font-black uppercase tracking-[0.4em]">{meal.greeting}</span>
               </div>
 
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 leading-[0.8] tracking-tighter drop-shadow-2xl">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 md:mb-10 leading-[0.8] tracking-tighter drop-shadow-2xl">
                 FEAST ON<br />
                 <span className="text-[#E67E22] inline-block mt-4">HERITAGE.</span>
               </h1>

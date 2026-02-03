@@ -1,6 +1,6 @@
 'use client'
 
-import { Heart, Star, Plus, ShoppingBag } from 'lucide-react'
+import { Heart, Star, Plus, Minus, ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
@@ -27,8 +27,12 @@ export function MenuItemCard({
     rating = 4.8,
 }: MenuItemCardProps) {
     const { toggleFavorite, isFavorite } = useFavoritesStore()
-    const addItem = useCartStore((state) => state.addItem)
+    const { items, addItem, updateQuantity } = useCartStore()
     const favorite = isFavorite(id)
+
+    // Find current item in cart to show quantity
+    const cartItem = items.find(item => item.menuItemId === id)
+    const quantity = cartItem?.quantity || 0
 
     return (
         <div className="group cursor-pointer">
@@ -63,19 +67,55 @@ export function MenuItemCard({
                         />
                     </button>
 
-                    {/* Quick Add Button - Appears on Hover */}
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            addItem({ menuItemId: id, name, price, image, quantity: 1 })
-                        }}
-                        className="absolute bottom-5 right-5 w-14 h-14 bg-[#E67E22] text-white rounded-2xl flex items-center justify-center shadow-2xl shadow-[#E67E22]/30 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 hover:scale-110 active:scale-90 z-20 md:translate-y-0 md:opacity-100"
-                    >
-                        <Plus className="w-7 h-7 stroke-[3]" />
-                    </button>
+                    {/* Quantity Control & Feedback */}
+                    <div className={cn(
+                        "absolute bottom-5 right-5 z-20 flex items-center gap-2 transition-all duration-500",
+                        quantity > 0 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 md:opacity-100 md:translate-y-0"
+                    )}>
+                        {quantity > 0 ? (
+                            <div className="flex items-center bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white p-1.5 gap-3 animate-premium-fade">
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        if (cartItem) updateQuantity(cartItem.id, quantity - 1)
+                                    }}
+                                    className="w-10 h-10 bg-gray-50 text-gray-900 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-colors"
+                                >
+                                    <Minus className="w-5 h-5" />
+                                </button>
+                                <span className="text-lg font-black text-gray-900 min-w-[1.2rem] text-center">{quantity}</span>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        if (cartItem) updateQuantity(cartItem.id, quantity + 1)
+                                    }}
+                                    className="w-10 h-10 bg-[#E67E22] text-white rounded-xl flex items-center justify-center hover:bg-[#D35400] transition-colors"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    addItem({ menuItemId: id, name, price, image, quantity: 1 })
+                                }}
+                                className="w-14 h-14 bg-[#E67E22] text-white rounded-2xl flex items-center justify-center shadow-2xl shadow-[#E67E22]/30 hover:scale-110 active:scale-95 transition-all duration-300"
+                            >
+                                <Plus className="w-7 h-7 stroke-[3]" />
+                            </button>
+                        )}
+                    </div>
 
-                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                    {/* Hover Description Reveal (Desktop) */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none flex items-center justify-center p-8 text-center">
+                        <p className="text-white text-sm font-medium leading-relaxed drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            {description}
+                        </p>
+                    </div>
                 </div>
 
                 {/* Content */}
