@@ -9,13 +9,14 @@ import { ChevronLeft, MapPin, Phone, CreditCard, Lock, Clock, ShieldCheck, Arrow
 import { useCartStore } from '@/lib/cart-store'
 import { useUserStore } from '@/lib/user-store'
 import { useOrderStore } from '@/lib/order-store'
+import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 export default function CheckoutPage() {
     const router = useRouter()
     const { items, getCartTotal, clearCart } = useCartStore()
     const { user } = useUserStore()
-    const addOrder = useOrderStore((state) => state.addOrder)
+    const { createOrder } = useOrderStore()
 
     const [loading, setLoading] = useState(false)
     const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'cash'>('mpesa')
@@ -29,20 +30,22 @@ export default function CheckoutPage() {
         // Simulate STK Push
         await new Promise(resolve => setTimeout(resolve, 2000))
 
-        const newOrder = {
-            id: `SV${Math.floor(10000 + Math.random() * 90000)}`,
+        const defaultAddress = user?.addresses.find(a => a.isDefault)?.street || user?.addresses[0]?.street
+
+        createOrder({
             items: [...items],
             total: finalTotal,
-            status: 'Preparing' as const,
-            timestamp: new Date().toISOString(),
-            address: user?.address || 'Current Location',
+            address: defaultAddress || 'Current Location',
             paymentMethod
-        }
+        })
 
-        addOrder(newOrder)
+        const activeOrderId = useOrderStore.getState().activeOrderId
+
         clearCart()
         setLoading(false)
-        router.push(`/order/${newOrder.id}`)
+        if (activeOrderId) {
+            router.push(`/order/${activeOrderId}`)
+        }
     }
 
     if (items.length === 0) {
@@ -115,7 +118,7 @@ export default function CheckoutPage() {
                                     <div className="relative">
                                         <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
                                         <Input
-                                            defaultValue={user?.address}
+                                            defaultValue={user?.addresses.find(a => a.isDefault)?.street || user?.addresses[0]?.street}
                                             className="h-16 rounded-2xl bg-gray-50 border-gray-100 pl-16 pr-6 font-bold focus:ring-[#E67E22]"
                                         />
                                     </div>
