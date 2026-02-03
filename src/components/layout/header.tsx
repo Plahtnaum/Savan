@@ -69,7 +69,7 @@ export function Header() {
                     {/* Right Side Actions */}
                     <div className="flex items-center gap-3 sm:gap-6">
                         <div className="hidden md:flex items-center gap-8 mr-4 border-r border-gray-100 pr-8">
-                            <Link href="/support" className="text-[10px] font-black uppercase tracking-widest text-[#E67E22] hover:text-gray-900 transition-colors">Concierge</Link>
+                            <Link href="/support" className="text-[10px] font-black uppercase tracking-widest text-[#E67E22] hover:text-gray-900 transition-colors">Customer Care</Link>
                         </div>
 
                         {/* Cart */}

@@ -13,12 +13,17 @@ export type Order = {
     date: string
     address: string
     paymentMethod: string
+    customerPhone?: string
+}
+
+interface CreateOrderData extends Omit<Order, 'id' | 'orderNumber' | 'date' | 'status'> {
+    id?: string
 }
 
 interface OrderState {
     orders: Order[]
     activeOrderId: string | null
-    createOrder: (order: Omit<Order, 'id' | 'orderNumber' | 'date' | 'status'>) => void
+    createOrder: (order: CreateOrderData) => void
     updateOrderStatus: (orderId: string, status: OrderStatus) => void
 }
 
@@ -30,8 +35,8 @@ export const useOrderStore = create<OrderState>()(
             createOrder: (orderData) => set((state) => {
                 const newOrder: Order = {
                     ...orderData,
-                    id: Math.random().toString(36).substring(7),
-                    orderNumber: `SV${Math.floor(10000 + Math.random() * 90000)}`,
+                    id: orderData.id || Math.random().toString(36).substring(7),
+                    orderNumber: orderData.id ? orderData.id.replace('SVN-', '') : `SV${Math.floor(10000 + Math.random() * 90000)}`,
                     date: new Date().toISOString(),
                     status: 'Placed',
                 }

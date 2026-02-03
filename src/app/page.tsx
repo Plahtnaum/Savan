@@ -72,7 +72,7 @@ export default function HomePage() {
 
       <main className="pb-32">
         {/* Adaptive Hero Section - Cinematic & Kenyan Focused */}
-        <section className="relative min-h-[calc(100vh-9rem)] lg:h-[80vh] w-full overflow-hidden flex flex-col justify-center">
+        <section className="relative min-h-[calc(100dvh-4rem)] lg:h-[80vh] w-full overflow-hidden flex flex-col justify-center">
           <div className="absolute inset-0">
             <img
               src={meal.type === 'breakfast'
@@ -87,25 +87,25 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/50 to-transparent lg:via-black/30"></div>
           </div>
 
-          <div className="relative z-10 container max-w-[1440px] px-6 sm:px-12 py-12 md:py-0">
+          <div className="relative z-10 container max-w-[1440px] px-6 sm:px-12 pt-32 pb-12 md:py-0">
             <div className="max-w-4xl text-left">
-              <div className="inline-flex items-center gap-3 bg-[#E67E22] px-6 py-3 rounded-full mb-8 md:mb-10 animate-premium-fade shadow-2xl shadow-[#E67E22]/30 mt-6 md:mt-0">
+              <div className="inline-flex items-center gap-3 bg-[#E67E22] px-6 py-3 rounded-full mb-6 md:mb-10 animate-premium-fade shadow-2xl shadow-[#E67E22]/30">
                 <ChefHat className="w-5 h-5 text-white" />
                 <span className="text-white text-[11px] font-black uppercase tracking-[0.4em]">{meal.greeting}</span>
               </div>
 
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 md:mb-10 leading-[0.8] tracking-tighter drop-shadow-2xl">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 md:mb-10 leading-[0.8] tracking-tighter drop-shadow-2xl">
                 FEAST ON<br />
                 <span className="text-[#E67E22] inline-block mt-4">HERITAGE.</span>
               </h1>
 
-              <p className="text-lg md:text-2xl text-white/95 font-medium max-w-xl mb-10 leading-relaxed tracking-tight drop-shadow-xl">
+              <p className="text-lg md:text-2xl text-white/95 font-medium max-w-xl mb-8 md:mb-10 leading-relaxed tracking-tight drop-shadow-xl">
                 {meal.description}
               </p>
 
-              <div className="flex flex-wrap gap-6 items-center">
+              <div className="flex flex-wrap gap-4 md:gap-6 items-center">
                 <Link href="/menu">
-                  <Button size="lg" className="bg-[#E67E22] hover:bg-white hover:text-black text-white px-10 h-16 md:h-20 text-lg md:text-xl font-black rounded-2xl shadow-[0_20px_40px_rgba(230,126,34,0.3)] active:scale-95 transition-all duration-500 uppercase tracking-[0.2em] border-none">
+                  <Button size="lg" className="bg-[#E67E22] hover:bg-white hover:text-black text-white px-8 md:px-10 h-16 md:h-20 text-lg md:text-xl font-black rounded-2xl shadow-[0_20px_40px_rgba(230,126,34,0.3)] active:scale-95 transition-all duration-500 uppercase tracking-[0.2em] border-none">
                     Order Your Feast
                   </Button>
                 </Link>
