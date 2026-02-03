@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Colors */
+  --color-primary-50: #FFF5EB;
+  --color-primary-100: #FFE6CC;
+  --color-primary-200: #FFCD99;
+  --color-primary-300: #FFB366;
+  --color-primary-400: #FF9A33;
+  --color-primary-500: #E67E22;
+  --color-primary-600: #D35400;
+  --color-primary-700: #A04000;
+  --color-primary-800: #6E2C00;
+  --color-primary-900: #3B1800;
+
+  --color-secondary-50: #E8F5E9;
+  --color-secondary-100: #C8E6C9;
+  --color-secondary-200: #A5D6A7;
+  --color-secondary-300: #81C784;
+  --color-secondary-400: #66BB6A;
+  --color-secondary-500: #27AE60;
+  --color-secondary-600: #229954;
+  --color-secondary-700: #1E8449;
+  --color-secondary-800: #196F3D;
+  --color-secondary-900: #145A32;
+
+  --color-accent-500: #F39C12;
+  --color-accent-600: #E67E22;
+
+  --color-background: #FFFFFF;
+  --color-foreground: #212529;
+
+  --color-muted: #F8F9FA;
+  --color-muted-foreground: #6c757d;
+
+  --color-card: #FFFFFF;
+  --color-card-foreground: #212529;
+
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #212529;
+
+  --color-border: #E9ECEF;
+  --color-input: #DEE2E6;
+  --color-primary: var(--color-primary-500);
+  --color-primary-foreground: #FFFFFF;
+
+  --color-secondary: var(--color-secondary-500);
+  --color-secondary-foreground: #FFFFFF;
+
+  --color-accent: var(--color-accent-500);
+  --color-accent-foreground: #FFFFFF;
+
+  --color-destructive: #E74C3C;
+  --color-destructive-foreground: #FFFFFF;
+  
+  --color-ring: var(--color-primary-500);
+
+  /* Fonts */
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-poppins);
+  --font-mono: var(--font-mono);
+
+  /* Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #212529;
+}
+
+/* Dark mode overrides if needed */
+@media (prefers-color-scheme: dark) {
+  /* :root {
+    --background: #0D0F11;
+    --foreground: #F8F9FA;
+  } */
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Print Styles */
+@media print {
+  @page {
+    margin: 0;
+    size: auto;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+}
