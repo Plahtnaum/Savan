@@ -137,38 +137,30 @@ export default function HomePage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
             {CATEGORIES.map((cat) => {
-              const isActive = activeCategory === cat.type
               const Icon = cat.icon
               return (
-                <button
+                <Link
                   key={cat.name}
-                  onClick={() => setActiveCategory(cat.type)}
-                  className={cn(
-                    "relative flex flex-col items-center justify-center gap-4 p-6 md:p-8 rounded-[2.5rem] transition-all duration-500 overflow-hidden group border",
-                    isActive
-                      ? "bg-gray-900 text-white shadow-xl scale-105 border-gray-900"
-                      : "bg-white border-gray-50 text-gray-400 hover:border-gray-200 hover:shadow-lg"
-                  )}
+                  href={cat.type === 'All' ? '/menu' : `/menu?category=${encodeURIComponent(cat.type)}`}
+                  className="relative flex flex-col items-center justify-center gap-6 p-8 md:p-10 rounded-[3rem] bg-white border border-gray-50 text-gray-400 hover:border-[#E67E22]/30 hover:shadow-2xl hover:shadow-[#E67E22]/5 transition-all duration-500 overflow-hidden group active:scale-[0.98]"
                 >
-                  <div className={cn(
-                    "w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center transition-all duration-500",
-                    isActive ? "bg-[#E67E22] text-white" : "bg-gray-50 text-gray-300 group-hover:bg-[#E67E22]/10 group-hover:text-[#E67E22]"
-                  )}>
-                    <Icon className="w-7 h-7 md:w-8 md:h-8" />
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-3xl bg-gray-50 text-gray-300 group-hover:bg-[#E67E22] group-hover:text-white transition-all duration-500 flex items-center justify-center shadow-sm group-hover:shadow-xl group-hover:shadow-[#E67E22]/20 group-hover:-translate-y-2">
+                    <Icon className="w-8 h-8 md:w-10 md:h-10" />
                   </div>
                   <div className="text-center">
-                    <h3 className={cn(
-                      "font-black text-base md:text-lg mb-0.5 tracking-tight",
-                      isActive ? "text-white" : "text-gray-900"
-                    )}>{cat.name}</h3>
-                    <p className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] opacity-40">
-                      {isActive ? 'Taste Now' : 'Explore'}
+                    <h3 className="font-black text-lg md:text-xl mb-1.5 tracking-tight text-gray-900 group-hover:text-[#E67E22] transition-colors uppercase">{cat.name}</h3>
+                    <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
+                      <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#E67E22]">Explore Menu</span>
+                      <ArrowRight className="w-3 h-3 text-[#E67E22]" />
+                    </div>
+                    <p className="text-[8px] font-black uppercase tracking-[0.3em] opacity-30 group-hover:hidden transition-all">
+                      Regional Soul
                     </p>
                   </div>
-                  {isActive && (
-                    <div className="absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-[#E67E22] animate-pulse" />
-                  )}
-                </button>
+
+                  {/* Decorative Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#E67E22]/0 via-transparent to-[#E67E22]/0 group-hover:from-[#E67E22]/[0.02] group-hover:to-transparent pointer-events-none transition-all duration-700"></div>
+                </Link>
               )
             })}
           </div>

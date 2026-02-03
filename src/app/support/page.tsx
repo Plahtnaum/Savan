@@ -31,7 +31,7 @@ export default function SupportPage() {
         <div className="min-h-screen bg-white">
             <Header />
 
-            <main className="container max-w-[1440px] px-6 lg:px-12 py-16">
+            <main className="container max-w-7xl px-6 lg:px-12 py-16">
                 {/* Hero Header */}
                 <div className="mb-24 text-center">
                     <div className="w-20 h-20 bg-gray-900 rounded-3xl flex items-center justify-center text-[#E67E22] mx-auto mb-10 shadow-xl shadow-gray-200">
@@ -41,12 +41,12 @@ export default function SupportPage() {
                         How can we <br />
                         <span className="text-[#E67E22]">assist you?</span>
                     </h1>
-                    <p className="text-xl text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed">
-                        Our dedicated concierge team is standing by to ensure your experience with Savan is nothing short of perfect.
+                    <p className="text-xl text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed italic">
+                        Our dedicated team is standing by to ensure your experience with Savan is nothing short of perfect.
                     </p>
                 </div>
 
-                <div className="grid lg:grid-cols-12 gap-16 lg:gap-32">
+                <div className="grid lg:grid-cols-12 gap-12 lg:gap-20">
                     {/* FAQ Section */}
                     <div className="lg:col-span-7">
                         <h2 className="text-3xl font-black text-gray-900 tracking-tighter mb-12">Common Inquiries</h2>
