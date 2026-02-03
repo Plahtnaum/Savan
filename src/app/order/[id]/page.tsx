@@ -4,176 +4,184 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Header } from '@/components/layout/header'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { CheckCircle2, Circle, Clock, MapPin, Printer, Share2, Phone, MessageSquare } from 'lucide-react'
+import { CheckCircle2, Phone, MapPinOff, ArrowLeft, Clock, Package, Bike, CheckCircle } from 'lucide-react'
 import { useOrderStore } from '@/lib/order-store'
 import { cn } from '@/lib/utils'
-// import { toast } from 'sonner'
 
 export default function OrderTrackingPage() {
     const params = useParams()
     const router = useRouter()
     const orders = useOrderStore((state) => state.orders)
-    // Fix: Unwrap params properly if it's a promise, but in client component with hooks it's fine usually.
-    // However, simple find.
     const orderId = params?.id as string
     const order = orders.find(o => o.id === orderId)
 
-    // Simulation of status updates
     const updateStatus = useOrderStore((state) => state.updateOrderStatus)
 
     useEffect(() => {
         if (order && order.status === 'Placed') {
-            const timer = setTimeout(() => updateStatus(order.id, 'Preparing'), 5000)
+            const timer = setTimeout(() => updateStatus(order.id, 'Preparing'), 3000)
             return () => clearTimeout(timer)
         }
-    }, [order, updateStatus])
+        if (order && order.status === 'Preparing') {
+            const timer = setTimeout(() => updateStatus(order.id, 'Out for Delivery'), 8000)
+            return () => clearTimeout(timer)
+        }
+    }, [order?.status, order?.id, updateStatus])
 
     if (!order) {
-        return <div className="p-8 text-center">Order not found</div>
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-white">
+                <h2 className="text-2xl font-bold mb-4">Order Not Found</h2>
+                <Button onClick={() => router.push('/')} className="bg-[#E67E22]">Go Home</Button>
+            </div>
+        )
     }
 
     const steps = [
-        { status: 'Placed', label: 'Order Placed', time: order.date },
-        { status: 'Preparing', label: 'Preparing', time: 'Estimated 5 mins' },
-        { status: 'Out for Delivery', label: 'Out for Delivery', time: 'Estimated 15 mins' },
-        { status: 'Delivered', label: 'Delivered', time: '-' },
+        { status: 'Placed', label: 'Order Placed', time: '12:30 PM', icon: <Package className="w-5 h-5" /> },
+        { status: 'Preparing', label: 'Preparing', time: '12:35 PM', icon: <span className="text-xl">👨‍🍳</span> },
+        { status: 'Out for Delivery', label: 'Shipped', time: '12:50 PM', icon: <Bike className="w-5 h-5" /> },
+        { status: 'Delivered', label: 'Delivered', time: '1:10 PM', icon: <CheckCircle className="w-5 h-5" /> },
     ]
 
-    const currentStepIndex = steps.findIndex(s => s.status === order.status)
-    const isCompleted = order.status === 'Delivered'
-
-    const handleShare = async () => {
-        const text = `
-🍲 *Savan Eats Order #${order.orderNumber}*
----------------------------
-${order.items.map(i => `${i.quantity}x ${i.name}`).join('\n')}
----------------------------
-Total: KES ${order.total}
-Status: ${order.status}
-    `.trim()
-
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: `Order #${order.orderNumber}`,
-                    text: text,
-                })
-            } catch (err) {
-                console.log('Error sharing', err)
-            }
-        } else {
-            navigator.clipboard.writeText(text)
-            alert("Order details copied to clipboard!")
-        }
+    const statusMap: Record<string, number> = {
+        'Placed': 0,
+        'Preparing': 1,
+        'Out for Delivery': 2,
+        'Delivered': 3
     }
 
-    const handlePrint = () => {
-        window.print()
-    }
+    const currentStepIndex = statusMap[order.status] || 0
 
     return (
-        <div className="min-h-screen bg-muted/20 pb-20">
-            <div className="no-print">
-                <Header />
-            </div>
+        <div className="min-h-screen bg-white pb-32">
+            <Header />
 
-            <main className="container py-6 space-y-6 max-w-lg mx-auto">
-                {/* Status Card */}
-                <Card className="no-print border-t-4 border-t-primary">
-                    <CardContent className="pt-6 text-center space-y-4">
-                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto animate-pulse">
-                            {order.status === 'Placed' && <CheckCircle2 className="w-8 h-8 text-green-600" />}
-                            {order.status === 'Preparing' && <span className="text-2xl">👨‍🍳</span>}
-                            {order.status === 'Out for Delivery' && <span className="text-2xl">🛵</span>}
-                            {order.status === 'Delivered' && <span className="text-2xl">😋</span>}
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-bold font-display">{order.status}</h1>
-                            <p className="text-muted-foreground">Order #{order.orderNumber}</p>
+            <main className="max-w-xl mx-auto px-4 py-8">
+                {/* Back Link */}
+                <button
+                    onClick={() => router.push('/')}
+                    className="flex items-center gap-2 text-gray-500 font-bold text-sm mb-8 hover:text-gray-900 transition-colors"
+                >
+                    <ArrowLeft className="w-4 h-4" />
+                    Order Updates
+                </button>
+
+                {/* Main Tracking Card - Matching Sample 3 */}
+                <div className="relative overflow-hidden rounded-[2.5rem] bg-[#E67E22] p-8 text-white shadow-2xl shadow-[#E67E22]/20 mb-10">
+                    {/* Background Decorative Circles */}
+                    <div className="absolute top-[-10%] right-[-10%] w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+                    <div className="absolute bottom-[-10%] left-[-10%] w-32 h-32 bg-black/10 rounded-full blur-xl"></div>
+
+                    <div className="relative z-10">
+                        <div className="flex justify-between items-start mb-10">
+                            <div>
+                                <p className="text-white/70 text-sm font-bold uppercase tracking-wider mb-1">Order Status</p>
+                                <h2 className="text-3xl font-black">#{order.orderNumber}</h2>
+                            </div>
+                            <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl text-right">
+                                <p className="text-white/70 text-[10px] font-bold uppercase tracking-tighter">Est. Arrival</p>
+                                <p className="text-xl font-black">12:30 PM</p>
+                            </div>
                         </div>
 
-                        <div className="w-full bg-secondary/30 h-2 rounded-full overflow-hidden">
-                            <div
-                                className="bg-primary h-full transition-all duration-1000 ease-out"
-                                style={{ width: `${(currentStepIndex + 1) * 25}%` }}
-                            />
-                        </div>
-                    </CardContent>
-                </Card>
+                        {/* Vertical Timeline - Matching Sample 3 */}
+                        <div className="space-y-0 relative">
+                            {/* Connecting Line */}
+                            <div className="absolute left-[23px] top-6 bottom-6 w-0.5 border-l-2 border-dashed border-white/30"></div>
 
-                {/* Timeline (No Print) */}
-                <div className="bg-background rounded-lg p-6 shadow-sm no-print space-y-6">
-                    {steps.map((step, index) => (
-                        <div key={step.status} className="flex gap-4">
-                            <div className="flex flex-col items-center">
-                                <div className={cn(
-                                    "w-6 h-6 rounded-full border-2 flex items-center justify-center z-10",
-                                    index <= currentStepIndex ? "bg-primary border-primary text-white" : "bg-background border-muted"
-                                )}>
-                                    {index <= currentStepIndex && <CheckCircle2 className="w-4 h-4" />}
-                                </div>
-                                {index < steps.length - 1 && (
-                                    <div className={cn(
-                                        "w-0.5 flex-1 my-1",
-                                        index < currentStepIndex ? "bg-primary" : "bg-muted"
-                                    )} />
-                                )}
+                            {steps.map((step, index) => {
+                                const isActive = index <= currentStepIndex
+                                const isCurrent = index === currentStepIndex
+
+                                return (
+                                    <div key={step.status} className="flex items-start gap-6 pb-12 last:pb-0">
+                                        <div className={cn(
+                                            "w-12 h-12 rounded-full flex items-center justify-center z-10 transition-all duration-500 shadow-lg",
+                                            isActive ? "bg-white text-[#E67E22]" : "bg-white/10 text-white/40 border border-white/20"
+                                        )}>
+                                            {isActive ? (
+                                                index < currentStepIndex ? <CheckCircle2 className="w-6 h-6" /> : step.icon
+                                            ) : (
+                                                <div className="w-2 h-2 rounded-full bg-white/20" />
+                                            )}
+                                        </div>
+                                        <div className="pt-2">
+                                            <h3 className={cn(
+                                                "font-bold text-lg leading-tight transition-all",
+                                                isActive ? "text-white" : "text-white/40"
+                                            )}>
+                                                {step.label}
+                                            </h3>
+                                            <p className={cn(
+                                                "text-xs font-medium mt-1",
+                                                isActive ? "text-white/70" : "text-white/20"
+                                            )}>
+                                                {isActive ? step.time : 'Waiting...'}
+                                            </p>
+                                            {isCurrent && (
+                                                <div className="mt-4 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest inline-block border border-white/10 animate-pulse">
+                                                    Currently Updating
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Tracking Action Section */}
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between p-6 bg-gray-50 rounded-3xl border border-gray-100 shadow-sm">
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-sm">
+                                📦
                             </div>
                             <div>
-                                <h3 className={cn("font-semibold text-sm", index <= currentStepIndex ? "text-foreground" : "text-muted-foreground")}>
-                                    {step.label}
-                                </h3>
-                                <p className="text-xs text-muted-foreground">{step.time}</p>
+                                <h4 className="font-bold text-gray-900">Track on map</h4>
+                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Live Tracking</p>
                             </div>
                         </div>
-                    ))}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="grid grid-cols-2 gap-4 no-print">
-                    <Button variant="outline" className="gap-2" onClick={handleShare}>
-                        <Share2 className="w-4 h-4" /> Share Order
-                    </Button>
-                    <Button variant="outline" className="gap-2" onClick={handlePrint}>
-                        <Printer className="w-4 h-4" /> Print Receipt
-                    </Button>
-                </div>
-
-                {/* Receipt (Print Only) */}
-                <div className="hidden print-only p-4 border rounded">
-                    <div className="text-center mb-6">
-                        <h2 className="text-2xl font-bold">Savan Eats</h2>
-                        <p className="text-sm">Authentic African Cuisine</p>
-                        <p className="text-xs mt-2">{new Date(order.date).toLocaleString()}</p>
-                        <p className="text-lg font-mono font-bold mt-2">#{order.orderNumber}</p>
+                        <Button variant="ghost" size="icon" className="rounded-2xl w-12 h-12 bg-white shadow-sm border border-gray-100 hover:bg-[#E67E22]/10 group">
+                            <ArrowLeft className="w-5 h-5 text-gray-500 group-hover:text-[#E67E22] rotate-180" />
+                        </Button>
                     </div>
 
-                    <div className="border-t border-b py-4 my-4 border-black">
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <Button className="flex-1 h-16 rounded-[1.5rem] bg-gray-900 hover:bg-black text-white font-bold flex items-center justify-center gap-3">
+                            <Phone className="w-5 h-5" />
+                            Call Rider
+                        </Button>
+                        <Button variant="outline" className="flex-1 h-16 rounded-[1.5rem] border-2 border-gray-100 hover:bg-gray-50 font-bold flex items-center justify-center gap-3 text-gray-700">
+                            <MapPinOff className="w-5 h-5 text-gray-400" />
+                            Full Details
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Mini Receipt Summary */}
+                <div className="mt-12 p-8 border border-gray-100 rounded-[2rem] bg-gray-50/50">
+                    <h5 className="font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <Package className="w-5 h-5 text-gray-400" />
+                        Order Summary
+                    </h5>
+                    <div className="space-y-4">
                         {order.items.map(item => (
-                            <div key={item.id} className="flex justify-between mb-2 font-mono text-sm">
-                                <span>{item.quantity}x {item.name}</span>
-                                <span>{item.price * item.quantity}</span>
+                            <div key={item.id} className="flex justify-between items-center text-sm font-bold">
+                                <div className="flex items-center gap-2">
+                                    <span className="bg-white px-2 py-1 rounded-lg text-xs text-[#E67E22] border border-gray-100">{item.quantity}x</span>
+                                    <span className="text-gray-700">{item.name}</span>
+                                </div>
+                                <span className="text-gray-900">KES {item.price * item.quantity}</span>
                             </div>
                         ))}
                     </div>
-
-                    <div className="space-y-1 font-mono text-sm text-right">
-                        <div className="flex justify-between">
-                            <span>Delivery</span>
-                            <span>150</span>
-                        </div>
-                        <div className="flex justify-between font-bold text-lg mt-2">
-                            <span>Total</span>
-                            <span>KES {order.total}</span>
-                        </div>
-                    </div>
-
-                    <div className="mt-8 text-center text-xs">
-                        <p>Customer: {useOrderStore.getState().orders?.length ? 'Guest' : 'User'}</p>
-                        <p>Payment: {order.paymentMethod}</p>
-                        <p className="mt-4">*** Thank You! ***</p>
+                    <div className="h-px bg-gray-200/50 my-6" />
+                    <div className="flex justify-between items-center">
+                        <span className="text-gray-400 font-bold uppercase text-[10px]">Total Paid</span>
+                        <span className="text-[#E67E22] text-2xl font-black">KES {order.total}</span>
                     </div>
                 </div>
             </main>

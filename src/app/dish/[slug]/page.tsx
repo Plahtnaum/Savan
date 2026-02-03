@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Minus, Plus, ChevronLeft, Star, Clock, Flame, Leaf } from 'lucide-react'
+import { Minus, Plus, ChevronLeft, Star, Clock, Heart, ShoppingBag, ShieldCheck, Info } from 'lucide-react'
 import { MENU_ITEMS } from '@/lib/menu-data'
 import { useCartStore } from '@/lib/cart-store'
 import { cn } from '@/lib/utils'
@@ -23,11 +23,25 @@ export default function DishDetailPage() {
     const [selectedSpice, setSelectedSpice] = useState<string | undefined>(
         item?.options?.spiceLevels?.[1]
     )
+    const [isFavorite, setIsFavorite] = useState(false)
     const addItem = useCartStore((state) => state.addItem)
     const [isAdding, setIsAdding] = useState(false)
 
     if (!item) {
-        return <div className="p-8 text-center">Item not found</div>
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <div className="text-center px-6">
+                    <h2 className="text-3xl font-black mb-4 tracking-tighter">Dish Not Found</h2>
+                    <p className="text-gray-400 mb-8 font-medium">Deepest apologies, we couldn't find this exact selection.</p>
+                    <Button
+                        onClick={() => router.push('/menu')}
+                        className="bg-[#E67E22] hover:bg-black text-white rounded-2xl px-12 h-14 font-black uppercase tracking-widest text-[10px]"
+                    >
+                        Return to Menu
+                    </Button>
+                </div>
+            </div>
+        )
     }
 
     const handleAddToCart = () => {
@@ -45,150 +59,204 @@ export default function DishDetailPage() {
                 }
             })
             setIsAdding(false)
-            router.back()
-        }, 500)
+            router.push('/cart')
+        }, 600)
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-24">
-            {/* Hero Image with Back Button */}
-            <div className="relative h-[300px] md:h-[400px] w-full bg-gray-900">
-                <img
-                    src={item.image}
-                    alt={item.name}
-                    className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        <div className="min-h-screen bg-white">
+            {/* Cinematic Adaptive Layout */}
+            <div className="flex flex-col lg:flex-row min-h-screen">
 
-                <div className="absolute top-4 left-4 z-10">
-                    <Button
-                        variant="secondary"
-                        size="icon"
-                        className="rounded-full h-10 w-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg"
-                        onClick={() => router.back()}
-                    >
-                        <ChevronLeft className="h-6 w-6 text-foreground" />
-                    </Button>
-                </div>
+                {/* Left Aspect: High-Fidelity Visual Hub (Adaptive Sticky Side) */}
+                <div className="relative h-[50vh] lg:h-screen lg:w-1/2 lg:sticky lg:top-0 overflow-hidden group">
+                    <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[10s]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
 
-                {/* Badge */}
-                {item.tags.length > 0 && (
-                    <div className="absolute bottom-4 left-4">
-                        <Badge className="bg-accent text-white font-semibold shadow-lg">
-                            {item.tags[0]}
-                        </Badge>
-                    </div>
-                )}
-            </div>
-
-            <div className="container max-w-4xl -mt-6 relative z-10 bg-gradient-to-b from-gray-50 to-white rounded-t-3xl p-6 min-h-[400px]">
-
-                {/* Title & Price */}
-                <div className="flex justify-between items-start mb-3">
-                    <h1 className="text-3xl font-bold font-display flex-1 pr-4">{item.name}</h1>
-                    <span className="text-3xl font-bold text-primary font-display whitespace-nowrap">KES {item.price}</span>
-                </div>
-
-                {/* Meta Info */}
-                <div className="flex items-center gap-4 text-sm mb-6 pb-6 border-b border-gray-200">
-                    <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-full">
-                        <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                        <span className="font-semibold text-foreground">{item.rating}</span>
-                        <span className="text-muted-foreground">({item.reviews})</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 bg-gray-100 px-3 py-1.5 rounded-full">
-                        <Clock className="w-4 h-4 text-gray-600" />
-                        <span className="text-gray-700 font-medium">{item.prepTime}</span>
-                    </div>
-                </div>
-
-                {/* Description */}
-                <div className="mb-8">
-                    <h3 className="font-semibold text-lg mb-2">Description</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                        {item.description}
-                    </p>
-                </div>
-
-                {/* Customization Options */}
-                <div className="space-y-6">
-                    {item.options?.sides && (
-                        <div className="space-y-3">
-                            <h3 className="font-semibold text-lg">Choose Your Side</h3>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                {item.options.sides.map((side) => (
-                                    <button
-                                        key={side}
-                                        onClick={() => setSelectedSide(side)}
-                                        className={cn(
-                                            "px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all text-center",
-                                            selectedSide === side
-                                                ? "border-primary bg-primary/5 text-primary shadow-sm"
-                                                : "border-gray-200 bg-white hover:border-gray-300"
-                                        )}
-                                    >
-                                        {side}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {item.options?.spiceLevels && (
-                        <div className="space-y-3">
-                            <h3 className="font-semibold text-lg">Spice Level</h3>
-                            <div className="grid grid-cols-3 gap-3">
-                                {item.options.spiceLevels.map((level) => (
-                                    <button
-                                        key={level}
-                                        onClick={() => setSelectedSpice(level)}
-                                        className={cn(
-                                            "px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all flex items-center justify-center gap-2",
-                                            selectedSpice === level
-                                                ? "border-primary bg-primary/5 text-primary shadow-sm"
-                                                : "border-gray-200 bg-white hover:border-gray-300"
-                                        )}
-                                    >
-                                        {level === 'Hot' && <Flame className="w-4 h-4 text-red-500" />}
-                                        {level === 'Medium' && <Flame className="w-4 h-4 text-orange-500" />}
-                                        {level === 'Mild' && <Leaf className="w-4 h-4 text-green-500" />}
-                                        {level}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Sticky Bottom Bar */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 px-6 safe-area-bottom z-50 shadow-[0_-4px_12px_rgba(0,0,0,0.08)]">
-                <div className="container max-w-4xl mx-auto flex items-center justify-between gap-4">
-                    {/* Quantity */}
-                    <div className="flex items-center gap-3 bg-gray-100 rounded-full px-1 py-1 h-12">
+                    {/* Controls */}
+                    <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-6">
                         <button
-                            className="w-10 h-10 flex items-center justify-center hover:bg-white rounded-full transition-colors"
-                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                            onClick={() => router.back()}
+                            className="w-14 h-14 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl flex items-center justify-center shadow-2xl hover:bg-white hover:text-black transition-all text-white group"
                         >
-                            <Minus className="w-4 h-4" />
+                            <ChevronLeft className="h-6 w-6 group-hover:-translate-x-1 transition-transform" />
                         </button>
-                        <span className="font-semibold w-8 text-center">{quantity}</span>
+
                         <button
-                            className="w-10 h-10 flex items-center justify-center hover:bg-white rounded-full transition-colors"
-                            onClick={() => setQuantity(quantity + 1)}
+                            onClick={() => setIsFavorite(!isFavorite)}
+                            className="w-14 h-14 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl flex items-center justify-center shadow-2xl hover:bg-white transition-all text-white"
                         >
-                            <Plus className="w-4 h-4" />
+                            <Heart
+                                className={cn(
+                                    "h-6 w-6 transition-all",
+                                    isFavorite ? "fill-[#E67E22] text-[#E67E22]" : ""
+                                )}
+                            />
                         </button>
                     </div>
 
-                    <Button
-                        size="lg"
-                        className="flex-1 rounded-full h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-shadow"
-                        onClick={handleAddToCart}
-                        disabled={isAdding}
-                    >
-                        {isAdding ? 'Adding...' : `Add to Cart • KES ${item.price * quantity}`}
-                    </Button>
+                    {/* Image Caption - Desktop Only */}
+                    <div className="absolute bottom-12 left-12 right-12 hidden lg:block text-white">
+                        <Badge variant="outline" className="border-white/40 text-white mb-4 uppercase tracking-[0.2em] font-black text-[10px]">Authentic Heritage</Badge>
+                        <h2 className="text-6xl font-black tracking-tighter leading-none mb-4">{item.name}</h2>
+                        <div className="flex items-center gap-6 opacity-60">
+                            <div className="flex items-center gap-2">
+                                <Star className="w-4 h-4 fill-[#E67E22] text-[#E67E22]" />
+                                <span className="font-bold">{item.rating} (500+)</span>
+                            </div>
+                            <div className="w-1 h-1 rounded-full bg-white"></div>
+                            <div className="flex items-center gap-2">
+                                <Clock className="w-4 h-4" />
+                                <span className="font-bold">{item.prepTime}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Aspect: Detailed Orchestration Hub */}
+                <div className="flex-1 lg:max-w-2xl px-6 py-12 lg:px-16 lg:py-24 space-y-16">
+
+                    {/* Header (Adaptive Mobile Support) */}
+                    <div className="lg:hidden">
+                        <h1 className="text-4xl font-black text-gray-900 mb-4 tracking-tighter">{item.name}</h1>
+                        <div className="flex items-center gap-4 text-xs font-bold text-gray-400 uppercase tracking-widest">
+                            <span className="flex items-center gap-1 text-[#E67E22]"><Star className="w-4 h-4 fill-current" /> {item.rating}</span>
+                            <span>•</span>
+                            <span>{item.prepTime}</span>
+                        </div>
+                    </div>
+
+                    {/* Pricing & Summary */}
+                    <div className="flex justify-between items-end border-b border-gray-50 pb-12">
+                        <div className="space-y-1">
+                            <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">Investment</p>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-5xl font-black text-[#E67E22] tracking-tighter">KES {item.price}</span>
+                                <span className="text-gray-300 font-bold text-sm">/ portion</span>
+                            </div>
+                        </div>
+                        <div className="text-right hidden sm:block">
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">Availability</p>
+                            <div className="flex items-center gap-2 text-green-500 font-black text-sm uppercase tracking-wider">
+                                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                                Ready to Prep
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Narrative Content */}
+                    <div className="space-y-6">
+                        <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-[0.3em] flex items-center gap-2">
+                            <Info className="w-4 h-4 text-[#E67E22]" />
+                            The Experience
+                        </h3>
+                        <p className="text-gray-500 text-xl font-medium leading-relaxed tracking-tight">
+                            {item.description || "A masterful creation balancing tradition and contemporary culinary precision. Sourced from organic local farms and prepared through time-honored techniques, this dish delivers an explosion of cultural heritage in every mouthful."}
+                        </p>
+                    </div>
+
+                    {/* Orchestration Grid - Highly Adaptive */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        {item.options?.sides && (
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between">
+                                    <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Select Side</h4>
+                                    <span className="text-[9px] font-black text-[#E67E22] bg-[#E67E22]/10 px-2 py-0.5 rounded uppercase tracking-tighter">Required</span>
+                                </div>
+                                <div className="space-y-3">
+                                    {item.options.sides.map((side) => (
+                                        <button
+                                            key={side}
+                                            onClick={() => setSelectedSide(side)}
+                                            className={cn(
+                                                "w-full px-6 py-4 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center justify-between border-2",
+                                                selectedSide === side
+                                                    ? "bg-gray-900 text-white border-gray-900 shadow-xl"
+                                                    : "bg-white text-gray-400 border-gray-100 hover:border-gray-200"
+                                            )}
+                                        >
+                                            {side}
+                                            {selectedSide === side && <ShieldCheck className="w-4 h-4 text-[#E67E22]" />}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {item.options?.spiceLevels && (
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between">
+                                    <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Spice Matrix</h4>
+                                    <span className="text-[9px] font-black text-gray-300 bg-gray-50 px-2 py-0.5 rounded uppercase tracking-tighter">Adaptive</span>
+                                </div>
+                                <div className="grid grid-cols-1 gap-3">
+                                    {item.options.spiceLevels.map((level) => {
+                                        const spiceIcons = { 'Mild': '🌿', 'Medium': '🌶️', 'Hot': '🔥' }
+                                        return (
+                                            <button
+                                                key={level}
+                                                onClick={() => setSelectedSpice(level)}
+                                                className={cn(
+                                                    "px-6 py-4 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-4 border-2",
+                                                    selectedSpice === level
+                                                        ? "bg-[#E67E22]/10 text-[#E67E22] border-[#E67E22]"
+                                                        : "bg-white text-gray-400 border-gray-100 hover:border-gray-200"
+                                                )}
+                                            >
+                                                <span className="text-xl">{spiceIcons[level as keyof typeof spiceIcons]}</span>
+                                                {level}
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Persistent Order Action Hub */}
+                    <div className="pt-16 lg:pt-32">
+                        <div className="bg-gray-50 rounded-[2.5rem] p-8 lg:p-12 border border-gray-100">
+                            <div className="flex flex-col sm:flex-row items-center gap-8">
+                                <div className="flex items-center gap-6 bg-white p-2 rounded-2xl shadow-sm border border-gray-100">
+                                    <button
+                                        className="w-12 h-12 flex items-center justify-center bg-gray-50 text-gray-900 rounded-xl hover:bg-gray-100 transition-colors disabled:opacity-30"
+                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                        disabled={quantity <= 1}
+                                    >
+                                        <Minus className="w-5 h-5" />
+                                    </button>
+                                    <span className="font-black text-2xl w-8 text-center text-gray-900">{quantity}</span>
+                                    <button
+                                        className="w-12 h-12 flex items-center justify-center bg-gray-50 text-gray-900 rounded-xl hover:bg-gray-100 transition-colors"
+                                        onClick={() => setQuantity(quantity + 1)}
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                    </button>
+                                </div>
+
+                                <Button
+                                    size="lg"
+                                    className="flex-1 w-full h-16 rounded-2xl bg-[#E67E22] hover:bg-black text-white text-lg font-black shadow-2xl shadow-[#E67E22]/20 transition-all flex items-center justify-center gap-4 uppercase tracking-widest active:scale-95 group"
+                                    onClick={handleAddToCart}
+                                    disabled={isAdding}
+                                >
+                                    {isAdding ? (
+                                        <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+                                    ) : (
+                                        <>
+                                            <ShoppingBag className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                                            <span>Add to Cart • KES {item.price * quantity}</span>
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
+                            <p className="text-center text-[9px] font-black text-gray-300 uppercase tracking-[0.4em] mt-8">Secure Premium Transactions Guaranteed</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

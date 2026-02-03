@@ -2,143 +2,237 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Header } from '@/components/layout/header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowLeft, Loader2, MapPin, Truck } from 'lucide-react'
+import { ChevronLeft, MapPin, Phone, CreditCard, Lock, Clock, ShieldCheck, ArrowRight, Truck } from 'lucide-react'
 import { useCartStore } from '@/lib/cart-store'
+import { useUserStore } from '@/lib/user-store'
 import { useOrderStore } from '@/lib/order-store'
-import { useUserStore } from '@/lib/user-store' // Assuming we might use this later
-import Link from 'next/link'
+import { cn } from '@/lib/utils'
 
 export default function CheckoutPage() {
     const router = useRouter()
     const { items, getCartTotal, clearCart } = useCartStore()
-    const { createOrder } = useOrderStore()
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [address, setAddress] = useState('')
-    const [isProcessing, setIsProcessing] = useState(false)
+    const { user } = useUserStore()
+    const addOrder = useOrderStore((state) => state.addOrder)
 
-    const subtotal = getCartTotal()
+    const [loading, setLoading] = useState(false)
+    const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'cash'>('mpesa')
+
+    const total = getCartTotal()
     const deliveryFee = 150
-    const total = subtotal + deliveryFee
+    const finalTotal = total + deliveryFee
 
     const handlePlaceOrder = async () => {
-        if (!phoneNumber || !address) return;
-
-        setIsProcessing(true)
-
-        // Simulate API call / M-Pesa STK Push
+        setLoading(true)
+        // Simulate STK Push
         await new Promise(resolve => setTimeout(resolve, 2000))
 
-        createOrder({
-            items,
-            total,
-            address,
-            paymentMethod: 'M-Pesa',
-        })
+        const newOrder = {
+            id: `SV${Math.floor(10000 + Math.random() * 90000)}`,
+            items: [...items],
+            total: finalTotal,
+            status: 'Preparing' as const,
+            timestamp: new Date().toISOString(),
+            address: user?.address || 'Current Location',
+            paymentMethod
+        }
 
-        const { activeOrderId } = useOrderStore.getState()
-
+        addOrder(newOrder)
         clearCart()
-        setIsProcessing(false)
-        router.push(`/order/${activeOrderId}`)
+        setLoading(false)
+        router.push(`/order/${newOrder.id}`)
     }
 
     if (items.length === 0) {
-        router.replace('/cart')
-        return null
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-white px-6">
+                <div className="text-center max-w-md">
+                    <div className="w-24 h-24 bg-gray-50 rounded-[2rem] flex items-center justify-center mx-auto mb-8">
+                        <ShieldCheck className="w-10 h-10 text-gray-200" />
+                    </div>
+                    <h2 className="text-3xl font-black text-gray-900 mb-4 tracking-tighter">Secure Checkout</h2>
+                    <p className="text-gray-400 font-medium mb-10">Your cart is currently empty. Our kitchen is ready when you are.</p>
+                    <Button
+                        onClick={() => router.push('/menu')}
+                        className="bg-[#E67E22] hover:bg-black text-white rounded-2xl px-12 h-14 font-black uppercase tracking-widest text-[10px]"
+                    >
+                        Browse Menu
+                    </Button>
+                </div>
+            </div>
+        )
     }
 
     return (
-        <div className="min-h-screen bg-muted/20 pb-20">
-            <div className="sticky top-0 z-10 bg-background border-b px-4 h-14 flex items-center">
-                <Link href="/cart" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
-                    <ArrowLeft className="w-4 h-4" />
-                    Back to Cart
-                </Link>
-                <h1 className="absolute left-1/2 -translate-x-1/2 font-semibold">Checkout</h1>
-            </div>
+        <div className="min-h-screen bg-white pb-32">
+            <Header />
 
-            <main className="container max-w-lg py-6 space-y-6">
-                {/* Delivery Address */}
-                <Card>
-                    <CardHeader className="pb-3 border-b">
-                        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                            <MapPin className="w-4 h-4" /> Delivery Details
-                        </h2>
-                    </CardHeader>
-                    <CardContent className="pt-4 space-y-4">
-                        <div>
-                            <label className="text-sm font-medium mb-1 block">Full Address</label>
-                            <Input
-                                placeholder="e.g. Westlands, Delta Towers, 5th Floor"
-                                value={address}
-                                onChange={(e) => setAddress(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            <label className="text-sm font-medium mb-1 block">Phone Number (for M-Pesa)</label>
-                            <Input
-                                type="tel"
-                                placeholder="e.g. 0712 345 678"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                            />
-                        </div>
-                    </CardContent>
-                </Card>
+            <main className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-16">
+                <header className="mb-16">
+                    <button
+                        onClick={() => router.back()}
+                        className="flex items-center gap-2 text-gray-400 hover:text-gray-900 transition-colors font-black text-[10px] uppercase tracking-[0.2em] mb-4"
+                    >
+                        <ChevronLeft className="w-4 h-4" />
+                        Back to Cart
+                    </button>
+                    <h1 className="text-5xl lg:text-7xl font-black text-gray-900 tracking-tighter">
+                        SECURE <span className="text-[#E67E22]">CHECKOUT</span>
+                    </h1>
+                </header>
 
-                {/* Order Summary */}
-                <Card>
-                    <CardHeader className="pb-3 border-b">
-                        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                            <Truck className="w-4 h-4" /> Order Summary
-                        </h2>
-                    </CardHeader>
-                    <CardContent className="pt-4 space-y-2">
-                        {items.map(item => (
-                            <div key={item.id} className="flex justify-between text-sm">
-                                <span>{item.quantity}x {item.name}</span>
-                                <span>KES {item.price * item.quantity}</span>
+                <div className="flex flex-col lg:flex-row gap-20">
+                    {/* Left: Formalities (Adaptive Column) */}
+                    <div className="flex-1 space-y-20">
+                        {/* Delivery Section */}
+                        <section className="space-y-10">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 bg-gray-900 rounded-2xl flex items-center justify-center text-white">
+                                    <MapPin className="w-6 h-6" />
+                                </div>
+                                <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">Delivery Logistics</h2>
                             </div>
-                        ))}
-                        <div className="h-px bg-border my-2" />
-                        <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Subtotal</span>
-                            <span>KES {subtotal}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Delivery Fee</span>
-                            <span>KES {deliveryFee}</span>
-                        </div>
-                        <div className="h-px bg-border my-2" />
-                        <div className="flex justify-between font-bold text-lg">
-                            <span>Total to Pay</span>
-                            <span className="text-primary">KES {total}</span>
-                        </div>
-                    </CardContent>
-                </Card>
 
-                <p className="text-xs text-center text-muted-foreground">
-                    By placing this order, you agree to pay via M-Pesa upon prompt.
-                </p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Full Name</label>
+                                    <Input
+                                        defaultValue={user?.name}
+                                        className="h-16 rounded-2xl bg-gray-50 border-gray-100 px-6 font-bold focus:ring-[#E67E22]"
+                                    />
+                                </div>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Phone Matrix</label>
+                                    <Input
+                                        defaultValue={user?.phone}
+                                        className="h-16 rounded-2xl bg-gray-50 border-gray-100 px-6 font-bold focus:ring-[#E67E22]"
+                                    />
+                                </div>
+                                <div className="md:col-span-2 space-y-3">
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Destination Address</label>
+                                    <div className="relative">
+                                        <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
+                                        <Input
+                                            defaultValue={user?.address}
+                                            className="h-16 rounded-2xl bg-gray-50 border-gray-100 pl-16 pr-6 font-bold focus:ring-[#E67E22]"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
 
-                <Button
-                    size="lg"
-                    className="w-full text-base font-bold h-12"
-                    onClick={handlePlaceOrder}
-                    disabled={!address || !phoneNumber || isProcessing}
-                >
-                    {isProcessing ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Processing M-Pesa...
-                        </>
-                    ) : (
-                        `Pay KES ${total}`
-                    )}
-                </Button>
+                        {/* Payment Section */}
+                        <section className="space-y-10">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 bg-gray-900 rounded-2xl flex items-center justify-center text-white">
+                                    <CreditCard className="w-6 h-6" />
+                                </div>
+                                <h2 className="text-2xl font-black tracking-tight text-gray-900 uppercase">Settlement Method</h2>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <button
+                                    onClick={() => setPaymentMethod('mpesa')}
+                                    className={cn(
+                                        "p-8 rounded-[2rem] border-2 transition-all duration-300 text-left relative overflow-hidden group",
+                                        paymentMethod === 'mpesa'
+                                            ? "border-[#E67E22] bg-[#E67E22]/5 shadow-xl shadow-[#E67E22]/10"
+                                            : "border-gray-100 hover:border-gray-200 bg-white"
+                                    )}
+                                >
+                                    <div className="relative z-10 flex flex-col justify-between h-full">
+                                        <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6">
+                                            <div className="w-6 h-6 bg-green-500 rounded-full" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-black text-lg text-gray-900 mb-1">M-Pesa STK</h4>
+                                            <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Instant Push Confirmation</p>
+                                        </div>
+                                    </div>
+                                    {paymentMethod === 'mpesa' && <ShieldCheck className="absolute top-8 right-8 w-6 h-6 text-[#E67E22]" />}
+                                </button>
+
+                                <button
+                                    onClick={() => setPaymentMethod('cash')}
+                                    className={cn(
+                                        "p-8 rounded-[2rem] border-2 transition-all duration-300 text-left relative overflow-hidden group",
+                                        paymentMethod === 'cash'
+                                            ? "border-[#E67E22] bg-[#E67E22]/5 shadow-xl shadow-[#E67E22]/10"
+                                            : "border-gray-100 hover:border-gray-200 bg-white"
+                                    )}
+                                >
+                                    <div className="relative z-10 flex flex-col justify-between h-full">
+                                        <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-gray-400 group-hover:text-gray-900 transition-colors">
+                                            <Truck className="w-6 h-6" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-black text-lg text-gray-900 mb-1">On Delivery</h4>
+                                            <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Settle upon Arrival</p>
+                                        </div>
+                                    </div>
+                                    {paymentMethod === 'cash' && <ShieldCheck className="absolute top-8 right-8 w-6 h-6 text-[#E67E22]" />}
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+
+                    {/* Right: Summary Hub (Adaptive Sticky Side) */}
+                    <div className="lg:w-96">
+                        <div className="sticky top-32 space-y-8">
+                            <div className="bg-gray-900 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden">
+                                <div className="relative z-10 space-y-12">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40">Order Summation</h3>
+                                        <Badge className="bg-white/10 text-white border-white/20 uppercase tracking-widest text-[9px] font-black">{items.length} Items</Badge>
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        <div className="flex justify-between text-white/60 font-medium">
+                                            <span>Sub-Total</span>
+                                            <span className="font-black">KES {total}</span>
+                                        </div>
+                                        <div className="flex justify-between text-white/60 font-medium">
+                                            <span>Delivery Logistics</span>
+                                            <span className="font-black">KES {deliveryFee}</span>
+                                        </div>
+                                        <div className="pt-8 border-t border-white/10 flex justify-between items-end">
+                                            <span className="text-xs font-black uppercase tracking-widest text-white/40">Total Settlement</span>
+                                            <span className="text-4xl font-black tracking-tighter">KES {finalTotal}</span>
+                                        </div>
+                                    </div>
+
+                                    <Button
+                                        className="w-full h-20 rounded-2xl bg-[#E67E22] hover:bg-white hover:text-black text-lg font-black transition-all flex items-center justify-center gap-4 uppercase tracking-widest shadow-2xl shadow-[#E67E22]/20 active:scale-95 disabled:bg-white/10 disabled:text-white/20 group"
+                                        onClick={handlePlaceOrder}
+                                        disabled={loading}
+                                    >
+                                        {loading ? (
+                                            <div className="w-6 h-6 border-3 border-current border-t-transparent rounded-full animate-spin" />
+                                        ) : (
+                                            <>
+                                                <span>Execute Order</span>
+                                                <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+                                            </>
+                                        )}
+                                    </Button>
+                                </div>
+
+                                {/* Decorative Abstract */}
+                                <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-[#E67E22] rounded-full blur-[100px] opacity-10"></div>
+                            </div>
+
+                            <div className="p-8 rounded-[2rem] border border-gray-100 flex items-start gap-4">
+                                <Lock className="w-5 h-5 text-green-500 shrink-0" />
+                                <div>
+                                    <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest mb-1">SSL Shield Active</h4>
+                                    <p className="text-[11px] text-gray-400 font-medium leading-relaxed">Transactions are encrypted via military-grade protocols for absolute security.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     )

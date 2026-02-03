@@ -27,6 +27,8 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 };
 
+import { SideNav } from "@/components/layout/side-nav";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,7 +39,12 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${poppins.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        {children}
+        <div className="flex bg-white min-h-screen">
+          <SideNav />
+          <div className="flex-1 lg:pl-[inherit] transition-all duration-500">
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );
