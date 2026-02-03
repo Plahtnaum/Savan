@@ -20,10 +20,9 @@ export default function DishDetailPage() {
 
     // Cart State
     const { items, addItem, updateQuantity } = useCartStore()
-    const cartItem = items.find(i => i.menuItemId === item?.id)
-    const initialQuantity = cartItem?.quantity || 1
 
-    const [quantity, setQuantity] = useState(initialQuantity)
+    const [quantity, setQuantity] = useState(1)
+    const [recipient, setRecipient] = useState('')
     const [selectedSide, setSelectedSide] = useState<string | undefined>(
         item?.options?.sides?.[0]
     )
@@ -32,13 +31,6 @@ export default function DishDetailPage() {
     )
     const [isFavorite, setIsFavorite] = useState(false)
     const [isAdding, setIsAdding] = useState(false)
-
-    // Sync quantity if cart changes externally
-    useEffect(() => {
-        if (cartItem) {
-            setQuantity(cartItem.quantity)
-        }
-    }, [cartItem])
 
     if (!item) {
         return (
@@ -57,6 +49,12 @@ export default function DishDetailPage() {
         )
     }
 
+    const cartItem = items.find(i =>
+        i.menuItemId === item.id &&
+        JSON.stringify(i.options) === JSON.stringify({ side: selectedSide, spice: selectedSpice }) &&
+        (i.recipient || '') === (recipient || '')
+    )
+
     const handleAction = () => {
         setIsAdding(true)
         setTimeout(() => {
@@ -69,6 +67,7 @@ export default function DishDetailPage() {
                     price: item.price,
                     quantity,
                     image: item.image,
+                    recipient: recipient || undefined,
                     options: {
                         side: selectedSide,
                         spice: selectedSpice,
@@ -235,26 +234,38 @@ export default function DishDetailPage() {
                             </div>
 
                             <div className="relative z-10 flex flex-col gap-10">
-                                <div className="flex items-center justify-between">
-                                    <div className="space-y-1">
-                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Current Subtotal</p>
-                                        <p className="text-3xl font-black text-gray-900">KES {item.price * quantity}</p>
+                                <div className="space-y-6">
+                                    <div className="space-y-3">
+                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Who is this for?</p>
+                                        <input
+                                            type="text"
+                                            placeholder="Recipient Name (optional)"
+                                            value={recipient}
+                                            onChange={(e) => setRecipient(e.target.value)}
+                                            className="w-full bg-white border border-gray-100 rounded-2xl h-14 px-6 font-bold text-gray-900 focus:border-[#E67E22] transition-colors outline-none placeholder:text-gray-200"
+                                        />
                                     </div>
-                                    <div className="flex items-center gap-6 bg-white p-2 rounded-2xl shadow-xl border border-gray-50">
-                                        <button
-                                            className="w-12 h-12 flex items-center justify-center bg-gray-50 text-gray-900 rounded-xl hover:bg-gray-100 transition-colors disabled:opacity-20"
-                                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                            disabled={quantity <= 1}
-                                        >
-                                            <Minus className="w-5 h-5" />
-                                        </button>
-                                        <span className="font-black text-2xl w-8 text-center text-gray-900">{quantity}</span>
-                                        <button
-                                            className="w-12 h-12 flex items-center justify-center bg-gray-50 text-gray-900 rounded-xl hover:bg-gray-100 transition-colors"
-                                            onClick={() => setQuantity(quantity + 1)}
-                                        >
-                                            <Plus className="w-5 h-5" />
-                                        </button>
+                                    <div className="flex items-center justify-between pt-4">
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Current Subtotal</p>
+                                            <p className="text-3xl font-black text-gray-900">KES {item.price * quantity}</p>
+                                        </div>
+                                        <div className="flex items-center gap-6 bg-white p-2 rounded-2xl shadow-xl border border-gray-50">
+                                            <button
+                                                className="w-12 h-12 flex items-center justify-center bg-gray-50 text-gray-900 rounded-xl hover:bg-gray-100 transition-colors disabled:opacity-20"
+                                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                                disabled={quantity <= 1}
+                                            >
+                                                <Minus className="w-5 h-5" />
+                                            </button>
+                                            <span className="font-black text-2xl w-8 text-center text-gray-900">{quantity}</span>
+                                            <button
+                                                className="w-12 h-12 flex items-center justify-center bg-gray-50 text-gray-900 rounded-xl hover:bg-gray-100 transition-colors"
+                                                onClick={() => setQuantity(quantity + 1)}
+                                            >
+                                                <Plus className="w-5 h-5" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 

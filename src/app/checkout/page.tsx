@@ -295,19 +295,49 @@ export default function CheckoutPage() {
                                         <Badge className="bg-white/10 text-white border-white/20 uppercase tracking-[0.3em] text-[9px] font-black h-8 px-4">{items.length} SELECTIONS</Badge>
                                     </div>
 
-                                    <div className="space-y-8">
-                                        <div className="flex justify-between text-white/70 font-bold text-lg">
-                                            <span>Sub-Total</span>
-                                            <span className="font-black text-white">KES {total.toLocaleString()}</span>
+                                    <div className="space-y-10">
+                                        {/* Grouped Items Breakdown */}
+                                        <div className="space-y-6">
+                                            {Object.entries(
+                                                items.reduce((acc, item) => {
+                                                    const name = item.recipient || 'Main Order'
+                                                    if (!acc[name]) acc[name] = []
+                                                    acc[name].push(item)
+                                                    return acc
+                                                }, {} as Record<string, typeof items>)
+                                            ).map(([recipient, groupItems]) => (
+                                                <div key={recipient} className="space-y-3">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="h-[1px] flex-1 bg-white/10" />
+                                                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">{recipient}</span>
+                                                        <div className="h-[1px] flex-1 bg-white/10" />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        {groupItems.map(item => (
+                                                            <div key={item.id} className="flex justify-between items-center text-sm">
+                                                                <span className="text-white/60 font-bold">{item.quantity}x {item.name}</span>
+                                                                <span className="text-white font-black text-xs">KES {(item.price * item.quantity).toLocaleString()}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
                                         </div>
-                                        <div className="flex justify-between text-white/70 font-bold text-lg">
-                                            <span>Delivery Logistics</span>
-                                            <span className="font-black text-white">KES {deliveryFee.toLocaleString()}</span>
-                                        </div>
-                                        <div className="pt-10 border-t border-white/10 flex justify-between items-end">
-                                            <div className="space-y-2">
-                                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Grand Total</span>
-                                                <p className="text-4xl sm:text-6xl font-black tracking-tighter">KES {finalTotal.toLocaleString()}</p>
+
+                                        <div className="space-y-8 pt-8 border-t border-white/5">
+                                            <div className="flex justify-between text-white/70 font-bold text-lg">
+                                                <span>Sub-Total</span>
+                                                <span className="font-black text-white">KES {total.toLocaleString()}</span>
+                                            </div>
+                                            <div className="flex justify-between text-white/70 font-bold text-lg">
+                                                <span>Delivery Logistics</span>
+                                                <span className="font-black text-white">KES {deliveryFee.toLocaleString()}</span>
+                                            </div>
+                                            <div className="pt-10 border-t border-white/10 flex justify-between items-end">
+                                                <div className="space-y-2">
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Grand Total</span>
+                                                    <p className="text-4xl sm:text-6xl font-black tracking-tighter">KES {finalTotal.toLocaleString()}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

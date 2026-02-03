@@ -96,7 +96,12 @@ export default function CartPage() {
                             </div>
                             <div className="flex-1 flex flex-col justify-between py-2 gap-4">
                                 <div className="flex justify-between items-start gap-4">
-                                    <div>
+                                    <div className="flex-1">
+                                        {item.recipient && (
+                                            <div className="bg-gray-100 text-gray-500 text-[8px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md inline-block mb-1">
+                                                For: {item.recipient}
+                                            </div>
+                                        )}
                                         <h3 className="font-black text-gray-900 text-xl sm:text-2xl mb-2 tracking-tight uppercase">{item.name}</h3>
                                         <p className="text-[10px] sm:text-xs text-gray-400 font-black uppercase tracking-[0.2em]">
                                             {item.options ? Object.values(item.options).filter(Boolean).join(' • ') : 'Signature Style'}

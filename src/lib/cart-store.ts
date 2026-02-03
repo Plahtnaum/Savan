@@ -8,6 +8,7 @@ export type CartItem = {
     price: number
     quantity: number
     image: string
+    recipient?: string
     options?: {
         side?: string
         spice?: string
@@ -31,7 +32,8 @@ export const useCartStore = create<CartState>()(
             addItem: (item) => set((state) => {
                 const existingItem = state.items.find(
                     (i) => i.menuItemId === item.menuItemId &&
-                        JSON.stringify(i.options) === JSON.stringify(item.options)
+                        JSON.stringify(i.options) === JSON.stringify(item.options) &&
+                        i.recipient === item.recipient
                 )
 
                 if (existingItem) {

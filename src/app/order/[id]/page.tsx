@@ -36,7 +36,21 @@ export default function OrderTrackingPage() {
 
     const handleShareWhatsApp = () => {
         if (!order) return
-        const message = `Hello! Ref: SAVAN EATS Order Confirmation.\nOrder ID: ${order.orderNumber}\nTotal Due: KES ${order.total.toLocaleString()}\nStatus: ${order.status}\n\nTrack progress here: ${window.location.origin}/order/${order.id}`
+
+        // Group items for WhatsApp
+        const grouped = order.items.reduce((acc, item) => {
+            const name = item.recipient || 'Main Order'
+            if (!acc[name]) acc[name] = []
+            acc[name].push(`${item.quantity}x ${item.name}`)
+            return acc
+        }, {} as Record<string, string[]>)
+
+        let breakdown = ''
+        for (const [recipient, items] of Object.entries(grouped)) {
+            breakdown += `\n*${recipient}*:\n- ${items.join('\n- ')}`
+        }
+
+        const message = `Hello! My Savan Eats order is confirmed.\nRef: #${order.orderNumber}\nTotal: KES ${order.total.toLocaleString()}\n\n*BATCH BREAKDOWN*:${breakdown}\n\nTrack progress here: ${window.location.origin}/order/${order.id}`
         const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
         window.open(whatsappUrl, '_blank')
     }
@@ -210,14 +224,32 @@ export default function OrderTrackingPage() {
                         <ChefHat className="w-32 h-32" />
                     </div>
                     <h5 className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-6 sm:mb-8 print:text-black print:text-sm">Order Selections</h5>
-                    <div className="space-y-4 sm:space-y-6">
-                        {order.items.map(item => (
-                            <div key={item.id} className="flex justify-between items-center print:border-b print:border-dotted print:border-gray-200 print:pb-2">
-                                <div className="flex items-center gap-3 sm:gap-4">
-                                    <span className="bg-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[9px] sm:text-[10px] font-black text-[#E67E22] border border-gray-100 shadow-sm print:bg-transparent print:border-none print:text-black">{item.quantity}x</span>
-                                    <span className="text-gray-900 font-bold text-base sm:text-lg">{item.name}</span>
+                    <div className="space-y-10">
+                        {Object.entries(
+                            order.items.reduce((acc, item) => {
+                                const name = item.recipient || 'Main Order'
+                                if (!acc[name]) acc[name] = []
+                                acc[name].push(item)
+                                return acc
+                            }, {} as Record<string, typeof order.items>)
+                        ).map(([recipient, groupItems]) => (
+                            <div key={recipient} className="space-y-4">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-[1px] flex-1 bg-gray-200 print:bg-black/10" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#E67E22] print:text-black">{recipient}</span>
+                                    <div className="h-[1px] flex-1 bg-gray-200 print:bg-black/10" />
                                 </div>
-                                <span className="text-gray-900 font-black text-base sm:text-lg">KES {(item.price * item.quantity).toLocaleString()}</span>
+                                <div className="space-y-4">
+                                    {groupItems.map(item => (
+                                        <div key={item.id} className="flex justify-between items-center print:border-b print:border-dotted print:border-gray-200 print:pb-2">
+                                            <div className="flex items-center gap-3 sm:gap-4">
+                                                <span className="bg-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[9px] sm:text-[10px] font-black text-[#E67E22] border border-gray-100 shadow-sm print:bg-transparent print:border-none print:text-black">{item.quantity}x</span>
+                                                <span className="text-gray-900 font-bold text-base sm:text-lg">{item.name}</span>
+                                            </div>
+                                            <span className="text-gray-900 font-black text-base sm:text-lg">KES {(item.price * item.quantity).toLocaleString()}</span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         ))}
                     </div>
