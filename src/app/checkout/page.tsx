@@ -86,9 +86,38 @@ export default function CheckoutPage() {
 
     if (orderGenerated) {
         const handlePrint = () => window.print()
-        const handleWhatsApp = () => {
-            const message = `Hello! My Savan Eats order is confirmed.\nOrder ID: ${tempOrderId}\nTotal Due: KES ${finalTotal.toLocaleString()}\n\nTrack progress here: ${window.location.origin}/order/${tempOrderId}`
-            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank')
+
+        const handleShare = async () => {
+            // Group items for breakdown
+            const grouped = items.reduce((acc, item) => {
+                const name = item.recipient || 'Main Order'
+                if (!acc[name]) acc[name] = []
+                acc[name].push(`${item.quantity}x ${item.name}`)
+                return acc
+            }, {} as Record<string, string[]>)
+
+            let breakdown = ''
+            for (const [recipient, gItems] of Object.entries(grouped)) {
+                breakdown += `\n*${recipient}*:\n- ${gItems.join('\n- ')}`
+            }
+
+            const shareData = {
+                title: 'Savan Eats Order Confirmation',
+                text: `Hello! My Savan Eats order is confirmed.\nRef: #${tempOrderId}\nTotal: KES ${finalTotal.toLocaleString()}\n\n*BATCH BREAKDOWN*:${breakdown}\n\nTrack progress here: ${window.location.origin}/order/${tempOrderId}`,
+                url: `${window.location.origin}/order/${tempOrderId}`
+            }
+
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData)
+                } catch (err) {
+                    console.error('Share failed', err)
+                }
+            } else {
+                // Fallback to WhatsApp
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareData.text)}`
+                window.open(whatsappUrl, '_blank')
+            }
         }
 
         return (
@@ -103,12 +132,58 @@ export default function CheckoutPage() {
                     <h2 className="text-5xl font-black text-gray-900 mb-4 tracking-tighter uppercase print:text-3xl">Order Secured.</h2>
                     <p className="text-gray-400 font-bold mb-12 print:mb-6">Order Reference: <span className="text-gray-900">#{tempOrderId}</span></p>
 
-                    <div className="bg-gray-50 rounded-[2.5rem] p-10 mb-12 border border-gray-100 space-y-8 print:bg-white print:border-none print:p-0">
-                        <p className="text-gray-600 font-medium print:text-black">
-                            {paymentMethod === 'cash'
-                                ? `Your feast is being prepared. Please have KES ${finalTotal.toLocaleString()} ready for our rider upon arrival.`
-                                : `M-Pesa payment initiated. Please check your phone to confirm the transaction of KES ${finalTotal.toLocaleString()}.`}
-                        </p>
+                    <div className="bg-gray-50 rounded-[2.5rem] p-8 sm:p-12 mb-12 border border-gray-100 space-y-12 print:bg-white print:border-none print:p-0">
+                        <div className="text-center space-y-4">
+                            <p className="text-gray-600 font-medium print:text-black text-lg">
+                                {paymentMethod === 'cash'
+                                    ? `Your feast is being prepared. Please have KES ${finalTotal.toLocaleString()} ready for our rider upon arrival.`
+                                    : `M-Pesa payment initiated. Please check your phone to confirm the transaction of KES ${finalTotal.toLocaleString()}.`}
+                            </p>
+                        </div>
+
+                        {/* Success Order Breakdown */}
+                        <div className="space-y-8 text-left">
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Order Contents</span>
+                                <div className="h-[1px] flex-1 bg-gray-100" />
+                            </div>
+                            <div className="space-y-8">
+                                {Object.entries(
+                                    items.reduce((acc, item) => {
+                                        const name = item.recipient || 'Main Order'
+                                        if (!acc[name]) acc[name] = []
+                                        acc[name].push(item)
+                                        return acc
+                                    }, {} as Record<string, typeof items>)
+                                ).map(([recipient, groupItems]) => (
+                                    <div key={recipient} className="space-y-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-[#E67E22]" />
+                                            <span className="text-xs font-black uppercase tracking-widest text-gray-900">{recipient}</span>
+                                        </div>
+                                        <div className="space-y-3 pl-4">
+                                            {groupItems.map(item => (
+                                                <div key={item.id} className="flex justify-between items-center">
+                                                    <span className="text-gray-500 font-bold text-sm">{item.quantity}x {item.name}</span>
+                                                    <span className="text-gray-900 font-black text-sm">KES {(item.price * item.quantity).toLocaleString()}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="pt-8 border-t border-gray-100">
+                                <div className="flex justify-between items-center mb-2">
+                                    <span className="text-gray-400 font-bold text-sm">Logistics Fee</span>
+                                    <span className="text-gray-900 font-bold">KES {deliveryFee.toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-gray-900 font-black uppercase text-xs tracking-widest">Grand Total</span>
+                                    <span className="text-[#E67E22] font-black text-2xl tracking-tighter">KES {finalTotal.toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
 
                         <div className="flex flex-col sm:flex-row gap-4 pt-4 print:hidden">
                             <Button
@@ -119,11 +194,11 @@ export default function CheckoutPage() {
                                 <Printer className="w-4 h-4" /> Print Receipt
                             </Button>
                             <Button
-                                onClick={handleWhatsApp}
+                                onClick={handleShare}
                                 variant="outline"
                                 className="flex-1 h-16 rounded-2xl border-gray-200 font-black uppercase text-[10px] tracking-widest gap-2"
                             >
-                                <Share2 className="w-4 h-4" /> Share to WhatsApp
+                                <Share2 className="w-4 h-4" /> Share Bill
                             </Button>
                         </div>
                     </div>

@@ -235,15 +235,19 @@ export default function DishDetailPage() {
 
                             <div className="relative z-10 flex flex-col gap-10">
                                 <div className="space-y-6">
-                                    <div className="space-y-3">
-                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Who is this for?</p>
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-[10px] font-black text-[#E67E22] uppercase tracking-[0.3em]">Group Ordering</p>
+                                            <Badge variant="outline" className="border-[#E67E22]/20 text-[#E67E22] text-[8px] font-black tracking-widest px-3">BATCH ENABLED</Badge>
+                                        </div>
                                         <input
                                             type="text"
-                                            placeholder="Recipient Name (optional)"
+                                            placeholder="Label for recipient (e.g. Alice, The Boss)"
                                             value={recipient}
                                             onChange={(e) => setRecipient(e.target.value)}
-                                            className="w-full bg-white border border-gray-100 rounded-2xl h-14 px-6 font-bold text-gray-900 focus:border-[#E67E22] transition-colors outline-none placeholder:text-gray-200"
+                                            className="w-full bg-white border-2 border-gray-100 rounded-2xl h-16 px-8 font-black text-gray-900 focus:border-[#E67E22] transition-colors outline-none placeholder:text-gray-200 shadow-sm"
                                         />
+                                        <p className="text-[8px] font-bold text-gray-300 italic px-2">Tagging this item helps us package it separately for multi-person orders.</p>
                                     </div>
                                     <div className="flex items-center justify-between pt-4">
                                         <div className="space-y-1">

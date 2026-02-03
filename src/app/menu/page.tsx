@@ -8,14 +8,16 @@ import { useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { CATEGORIES, MENU_ITEMS } from '@/lib/menu-data'
 import { useState, Suspense } from 'react'
-import { Search, SlidersHorizontal, ChevronLeft, Filter, X, ChefHat, LayoutGrid } from 'lucide-react'
+import { Search, SlidersHorizontal, ChevronLeft, Filter, X, ChefHat, LayoutGrid, ShoppingBag, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { useCartStore } from '@/lib/cart-store'
 
 function MenuContent() {
     const searchParams = useSearchParams()
     const initialCategory = searchParams.get('category') || 'All'
     const [selectedCategory, setSelectedCategory] = useState(initialCategory)
     const [searchQuery, setSearchQuery] = useState('')
+    const { items, getCartTotal } = useCartStore()
 
     const filteredItems = MENU_ITEMS.filter(item => {
         const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory
@@ -127,6 +129,23 @@ function MenuContent() {
                     >
                         Clear all filters
                     </Button>
+                </div>
+            )}
+            {/* Proceed to Cart Floating Badge */}
+            {items.length > 0 && (
+                <div className="fixed bottom-24 right-6 sm:right-12 z-50 animate-premium-fade">
+                    <Link href="/cart">
+                        <div className="bg-gray-900 text-white rounded-[2rem] p-3 pr-8 flex items-center gap-4 shadow-[0_30px_60px_rgba(0,0,0,0.4)] hover:scale-105 active:scale-95 transition-all border border-white/10 group">
+                            <div className="w-12 h-12 bg-[#E67E22] rounded-2xl flex items-center justify-center text-white shadow-lg">
+                                <ShoppingBag className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                            </div>
+                            <div>
+                                <p className="text-[9px] font-black uppercase tracking-widest text-white/40 leading-none mb-1">Items Reserved</p>
+                                <p className="text-sm font-black text-white leading-none">KES {getCartTotal().toLocaleString()}</p>
+                            </div>
+                            <ArrowRight className="w-5 h-5 text-[#E67E22] group-hover:translate-x-1 transition-transform ml-2" />
+                        </div>
+                    </Link>
                 </div>
             )}
         </div>

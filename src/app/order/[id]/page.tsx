@@ -34,10 +34,10 @@ export default function OrderTrackingPage() {
         window.print()
     }
 
-    const handleShareWhatsApp = () => {
+    const handleShare = async () => {
         if (!order) return
 
-        // Group items for WhatsApp
+        // Group items for breakdown
         const grouped = order.items.reduce((acc, item) => {
             const name = item.recipient || 'Main Order'
             if (!acc[name]) acc[name] = []
@@ -50,9 +50,23 @@ export default function OrderTrackingPage() {
             breakdown += `\n*${recipient}*:\n- ${items.join('\n- ')}`
         }
 
-        const message = `Hello! My Savan Eats order is confirmed.\nRef: #${order.orderNumber}\nTotal: KES ${order.total.toLocaleString()}\n\n*BATCH BREAKDOWN*:${breakdown}\n\nTrack progress here: ${window.location.origin}/order/${order.id}`
-        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
-        window.open(whatsappUrl, '_blank')
+        const shareData = {
+            title: 'Savan Eats Order Details',
+            text: `Hello! My Savan Eats order is confirmed.\nRef: #${order.orderNumber}\nTotal: KES ${order.total.toLocaleString()}\n\n*BATCH BREAKDOWN*:${breakdown}\n\nTrack progress here: ${window.location.origin}/order/${order.id}`,
+            url: `${window.location.origin}/order/${order.id}`
+        }
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData)
+            } catch (err) {
+                console.error('Share failed', err)
+            }
+        } else {
+            // Fallback to WhatsApp
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareData.text)}`
+            window.open(whatsappUrl, '_blank')
+        }
     }
 
     if (!order) {
@@ -195,7 +209,7 @@ export default function OrderTrackingPage() {
                             </div>
                         </div>
                         <Button
-                            onClick={handleShareWhatsApp}
+                            onClick={handleShare}
                             className="rounded-2xl w-12 h-12 bg-white shadow-sm border border-gray-100 hover:bg-[#E67E22]/10 transition-all p-0 flex items-center justify-center text-[#E67E22]"
                         >
                             <Share2 className="w-5 h-5" />

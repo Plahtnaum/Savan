@@ -58,10 +58,10 @@ export default function CartPage() {
                 </div>
 
                 {/* Free Delivery Promo */}
-                <div className="bg-gray-50 rounded-[2rem] p-8 mb-16 border border-gray-100 shadow-sm">
-                    <div className="flex items-center justify-between mb-6">
+                <div className="bg-gray-50 rounded-[2rem] p-8 mb-16 border border-gray-100 shadow-sm relative overflow-hidden">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-[#E67E22]/10 rounded-2xl flex items-center justify-center text-[#E67E22]">
+                            <div className="w-12 h-12 bg-[#E67E22]/10 rounded-2xl flex items-center justify-center text-[#E67E22] shrink-0">
                                 <Truck className="w-6 h-6" />
                             </div>
                             <div>
@@ -73,13 +73,24 @@ export default function CartPage() {
                                 <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Savan Member Perk</p>
                             </div>
                         </div>
-                        <span className="text-sm font-black text-[#E67E22]">{Math.round(progress)}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden">
-                        <div
-                            className="h-full bg-[#E67E22] transition-all duration-1000 ease-out rounded-full shadow-[0_0_10px_rgba(230,126,34,0.3)]"
-                            style={{ width: `${progress}%` }}
-                        />
+                        <div className="flex-1 sm:flex-none flex items-center gap-6">
+                            <div className="hidden sm:block">
+                                <div className="flex justify-between sm:justify-end items-center gap-3 mb-1">
+                                    <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest sm:hidden">Progress</span>
+                                    <span className="text-sm font-black text-[#E67E22]">{Math.round(progress)}%</span>
+                                </div>
+                                <div className="w-32 bg-gray-200 h-2 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-[#E67E22] transition-all duration-1000 ease-out rounded-full shadow-[0_0_10px_rgba(230,126,34,0.3)]"
+                                        style={{ width: `${progress}%` }}
+                                    />
+                                </div>
+                            </div>
+                            <Link href="/menu" className="bg-[#E67E22] text-white px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-[#E67E22]/20 flex items-center gap-3">
+                                Add More
+                                <Plus className="w-4 h-4" />
+                            </Link>
+                        </div>
                     </div>
                 </div>
 
@@ -190,6 +201,23 @@ export default function CartPage() {
             </div>
 
             <BottomNav />
+            {/* Proceed to Cart Floating Badge */}
+            {items.length > 0 && (
+                <div className="fixed bottom-24 right-6 sm:right-12 z-50 animate-premium-fade">
+                    <Link href="/cart">
+                        <div className="bg-gray-900 text-white rounded-[2rem] p-3 pr-8 flex items-center gap-4 shadow-[0_30px_60px_rgba(0,0,0,0.4)] hover:scale-105 active:scale-95 transition-all border border-white/10 group">
+                            <div className="w-12 h-12 bg-[#E67E22] rounded-2xl flex items-center justify-center text-white shadow-lg">
+                                <ShoppingBag className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                            </div>
+                            <div>
+                                <p className="text-[9px] font-black uppercase tracking-widest text-white/40 leading-none mb-1">Items Reserved</p>
+                                <p className="text-sm font-black text-white leading-none">KES {getCartTotal().toLocaleString()}</p>
+                            </div>
+                            <ArrowRight className="w-5 h-5 text-[#E67E22] group-hover:translate-x-1 transition-transform ml-2" />
+                        </div>
+                    </Link>
+                </div>
+            )}
         </div>
     )
 }
