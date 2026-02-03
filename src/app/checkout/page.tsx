@@ -85,35 +85,63 @@ export default function CheckoutPage() {
     }
 
     if (orderGenerated) {
+        const handlePrint = () => window.print()
+        const handleWhatsApp = () => {
+            const message = `Hello! My Savan Eats order is confirmed.\nOrder ID: ${tempOrderId}\nTotal Due: KES ${finalTotal.toLocaleString()}\n\nTrack progress here: ${window.location.origin}/order/${tempOrderId}`
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank')
+        }
+
         return (
             <div className="min-h-screen bg-white">
-                <Header />
-                <main className="container max-w-2xl mx-auto px-6 py-24 text-center">
-                    <div className="w-24 h-24 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-xl shadow-green-500/10">
+                <div className="print:hidden">
+                    <Header />
+                </div>
+                <main className="container max-w-2xl mx-auto px-6 py-24 text-center print:py-0 print:px-0">
+                    <div className="w-24 h-24 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-xl shadow-green-500/10 print:hidden">
                         <ShieldCheck className="w-12 h-12" />
                     </div>
-                    <h2 className="text-5xl font-black text-gray-900 mb-4 tracking-tighter uppercase">Order Secured.</h2>
-                    <p className="text-gray-400 font-bold mb-12">Order ID: <span className="text-gray-900">{tempOrderId}</span></p>
+                    <h2 className="text-5xl font-black text-gray-900 mb-4 tracking-tighter uppercase print:text-3xl">Order Secured.</h2>
+                    <p className="text-gray-400 font-bold mb-12 print:mb-6">Order Reference: <span className="text-gray-900">#{tempOrderId}</span></p>
 
-                    <div className="bg-gray-50 rounded-[2.5rem] p-10 mb-12 border border-gray-100 space-y-8">
-                        <p className="text-gray-600 font-medium">Your feast is being prepared. {paymentMethod === 'cash' ? "Please have KES " + finalTotal + " ready for our rider." : "A notification will appear on your phone for M-Pesa settlement."}</p>
+                    <div className="bg-gray-50 rounded-[2.5rem] p-10 mb-12 border border-gray-100 space-y-8 print:bg-white print:border-none print:p-0">
+                        <p className="text-gray-600 font-medium print:text-black">
+                            {paymentMethod === 'cash'
+                                ? `Your feast is being prepared. Please have KES ${finalTotal.toLocaleString()} ready for our rider upon arrival.`
+                                : `M-Pesa payment initiated. Please check your phone to confirm the transaction of KES ${finalTotal.toLocaleString()}.`}
+                        </p>
 
-                        <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                            <Button variant="outline" className="flex-1 h-16 rounded-2xl border-gray-200 font-black uppercase text-[10px] tracking-widest gap-2">
+                        <div className="flex flex-col sm:flex-row gap-4 pt-4 print:hidden">
+                            <Button
+                                onClick={handlePrint}
+                                variant="outline"
+                                className="flex-1 h-16 rounded-2xl border-gray-200 font-black uppercase text-[10px] tracking-widest gap-2"
+                            >
                                 <Printer className="w-4 h-4" /> Print Receipt
                             </Button>
-                            <Button variant="outline" className="flex-1 h-16 rounded-2xl border-gray-200 font-black uppercase text-[10px] tracking-widest gap-2">
+                            <Button
+                                onClick={handleWhatsApp}
+                                variant="outline"
+                                className="flex-1 h-16 rounded-2xl border-gray-200 font-black uppercase text-[10px] tracking-widest gap-2"
+                            >
                                 <Share2 className="w-4 h-4" /> Share to WhatsApp
                             </Button>
                         </div>
                     </div>
 
-                    <Button
-                        onClick={() => router.push(`/order/${tempOrderId}`)}
-                        className="bg-gray-900 text-white hover:bg-[#E67E22] rounded-2xl px-12 h-16 font-black uppercase tracking-widest text-[10px] transition-all"
-                    >
-                        Live Tracking Hub
-                    </Button>
+                    <div className="space-y-6 print:hidden">
+                        <Button
+                            onClick={() => router.push(`/order/${tempOrderId}`)}
+                            className="bg-gray-900 hover:bg-black text-white rounded-2xl w-full h-16 font-black uppercase tracking-widest text-xs"
+                        >
+                            Track Your Order
+                        </Button>
+                        <button
+                            onClick={() => router.push('/')}
+                            className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 hover:text-[#E67E22] transition-colors"
+                        >
+                            Return to Homepage
+                        </button>
+                    </div>
                 </main>
             </div>
         )

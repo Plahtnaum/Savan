@@ -36,7 +36,7 @@ export default function OrderTrackingPage() {
 
     const handleShareWhatsApp = () => {
         if (!order) return
-        const message = `Hello! Ref: SAVAN EATS Order Confirmation.\nOrder ID: ${order.orderNumber}\nTotal: KES ${order.total.toLocaleString()}\nStatus: ${order.status}\n\nTrack progress here: ${window.location.href}`
+        const message = `Hello! Ref: SAVAN EATS Order Confirmation.\nOrder ID: ${order.orderNumber}\nTotal Due: KES ${order.total.toLocaleString()}\nStatus: ${order.status}\n\nTrack progress here: ${window.location.origin}/order/${order.id}`
         const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
         window.open(whatsappUrl, '_blank')
     }
@@ -155,7 +155,7 @@ export default function OrderTrackingPage() {
                 {/* Print Only Header for Receipt */}
                 <div className="hidden print:block mb-8 text-center pt-8 border-b-2 border-gray-100 pb-8">
                     <h1 className="text-3xl font-black text-gray-900 tracking-tighter uppercase mb-2">Savan Eats</h1>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Official Trade Receipt</p>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Official Order Receipt</p>
                     <div className="mt-6 flex justify-between text-left">
                         <div>
                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Order Ref</p>
@@ -176,8 +176,8 @@ export default function OrderTrackingPage() {
                                 <Box className="w-7 h-7 sm:w-8 sm:h-8" />
                             </div>
                             <div>
-                                <h4 className="font-black text-xl sm:text-2xl text-gray-900 tracking-tight">Order Trading</h4>
-                                <p className="text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">In-Context Confirmation</p>
+                                <h4 className="font-black text-xl sm:text-2xl text-gray-900 tracking-tight">Order Progress</h4>
+                                <p className="text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">Live Updates & Confirmation</p>
                             </div>
                         </div>
                         <Button
@@ -199,7 +199,7 @@ export default function OrderTrackingPage() {
                             className="flex-1 h-16 sm:h-20 rounded-[1.5rem] sm:rounded-[2rem] border-2 border-gray-100 hover:bg-gray-50 font-black uppercase tracking-wider text-[9px] sm:text-[10px] flex items-center justify-center gap-3 sm:gap-4 text-gray-600 transition-all"
                         >
                             <Printer className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
-                            Evidence of Trade
+                            Print Receipt
                         </Button>
                     </div>
                 </div>
@@ -224,7 +224,7 @@ export default function OrderTrackingPage() {
                     <div className="h-[1px] bg-gray-200/50 my-6 sm:my-8 print:hidden" />
                     <div className="flex justify-between items-end print:mt-12">
                         <div className="print:hidden">
-                            <span className="text-gray-400 font-black uppercase text-[9px] sm:text-[10px] tracking-widest block mb-1">Total Trading Value</span>
+                            <span className="text-gray-400 font-black uppercase text-[9px] sm:text-[10px] tracking-widest block mb-1">Total Amount Due</span>
                             <span className="text-[#E67E22] text-3xl sm:text-4xl font-black tracking-tighter">KES {order.total.toLocaleString()}</span>
                         </div>
                         <div className="hidden print:block w-full">
