@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { Header } from '@/components/layout/header'
 import { BottomNav } from '@/components/layout/bottom-nav'
 import { Button } from '@/components/ui/button'
-import { CheckCircle2, Phone, MapPinOff, ArrowLeft, Clock, Package, Bike, CheckCircle, ChefHat, Box, Info } from 'lucide-react'
+import { CheckCircle2, Phone, ArrowLeft, Clock, Package, Bike, CheckCircle, ChefHat, Box, Info, Share2, Printer } from 'lucide-react'
 import { useOrderStore } from '@/lib/order-store'
 import { cn } from '@/lib/utils'
 
@@ -28,6 +28,18 @@ export default function OrderTrackingPage() {
             return () => clearTimeout(timer)
         }
     }, [order?.status, order?.id, updateStatus])
+
+    // Receipt Functions
+    const handlePrintReceipt = () => {
+        window.print()
+    }
+
+    const handleShareWhatsApp = () => {
+        if (!order) return
+        const message = `Hello! Ref: SAVAN EATS Order Confirmation.\nOrder ID: ${order.orderNumber}\nTotal: KES ${order.total.toLocaleString()}\nStatus: ${order.status}\n\nTrack progress here: ${window.location.href}`
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
+        window.open(whatsappUrl, '_blank')
+    }
 
     if (!order) {
         return (
@@ -59,38 +71,40 @@ export default function OrderTrackingPage() {
     const currentStepIndex = statusMap[order.status] || 0
 
     return (
-        <div className="min-h-screen bg-white pb-48">
-            <Header />
+        <div className="min-h-screen bg-white pb-48 print:pb-0">
+            <div className="print:hidden">
+                <Header />
+            </div>
 
-            <main className="max-w-2xl mx-auto px-6 py-12">
+            <main className="max-w-2xl mx-auto px-6 py-12 print:py-0 print:px-0">
                 {/* Back Link */}
                 <button
                     onClick={() => router.push('/menu')}
-                    className="flex items-center gap-2 text-[#E67E22] font-black text-[10px] uppercase tracking-[0.3em] mb-12 hover:translate-x-[-4px] transition-transform"
+                    className="flex items-center gap-2 text-[#E67E22] font-black text-[10px] uppercase tracking-[0.3em] mb-12 hover:translate-x-[-4px] transition-transform print:hidden"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Back to Selection
                 </button>
 
-                {/* Main Tracking Card */}
-                <div className="relative overflow-hidden rounded-[3rem] bg-gray-900 p-10 text-white shadow-2xl mb-12 border border-white/5">
+                {/* Main Tracking Card - Responsive Optimization */}
+                <div className="relative overflow-hidden rounded-[3rem] bg-gray-900 p-8 sm:p-10 text-white shadow-2xl mb-12 border border-white/5 print:rounded-none print:shadow-none print:bg-white print:text-black print:border-b-2 print:border-gray-100 print:mb-8">
                     {/* Background Decorative Elements */}
-                    <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-[#E67E22] rounded-full blur-[120px] opacity-20"></div>
+                    <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-[#E67E22] rounded-full blur-[120px] opacity-20 print:hidden"></div>
 
                     <div className="relative z-10">
-                        <div className="flex justify-between items-start mb-12">
+                        <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12 sm:mb-16">
                             <div>
-                                <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">Tracking Order</p>
-                                <h2 className="text-5xl font-black tracking-tighter">#{order.orderNumber}</h2>
+                                <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2 print:text-gray-400">Tracking Order</p>
+                                <h2 className="text-4xl sm:text-5xl font-black tracking-tighter truncate max-w-[200px] sm:max-w-none">#{order.orderNumber}</h2>
                             </div>
-                            <div className="bg-white/5 backdrop-blur-md px-6 py-4 rounded-[1.5rem] text-right border border-white/10">
-                                <p className="text-white/40 text-[9px] font-black uppercase tracking-widest mb-1">Estimated Arrival</p>
-                                <p className="text-2xl font-black text-[#E67E22]">~ 25 Mins</p>
+                            <div className="bg-white/5 backdrop-blur-md px-5 py-3 sm:px-6 sm:py-4 rounded-[1.5rem] sm:text-right border border-white/10 w-full sm:w-auto print:bg-gray-50 print:border-gray-100">
+                                <p className="text-white/40 text-[9px] font-black uppercase tracking-widest mb-1 print:text-gray-400">Estimated Arrival</p>
+                                <p className="text-xl sm:text-2xl font-black text-[#E67E22]">~ 25 Mins</p>
                             </div>
                         </div>
 
                         {/* Status Timeline */}
-                        <div className="space-y-0 relative">
+                        <div className="space-y-0 relative print:hidden">
                             {/* Connecting Line */}
                             <div className="absolute left-[23px] top-6 bottom-6 w-0.5 bg-gradient-to-b from-white/20 via-white/10 to-transparent"></div>
 
@@ -99,34 +113,34 @@ export default function OrderTrackingPage() {
                                 const isCurrent = index === currentStepIndex
 
                                 return (
-                                    <div key={step.status} className="flex items-start gap-8 pb-12 last:pb-0">
+                                    <div key={step.status} className="flex items-start gap-6 sm:gap-8 pb-10 sm:pb-12 last:pb-0">
                                         <div className={cn(
-                                            "w-12 h-12 rounded-2xl flex items-center justify-center z-10 transition-all duration-700 shadow-xl",
+                                            "w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center z-10 transition-all duration-700 shadow-xl",
                                             isActive
                                                 ? "bg-[#E67E22] text-white scale-110 shadow-[#E67E22]/20"
                                                 : "bg-white/5 text-white/20 border border-white/10"
                                         )}>
                                             {isActive ? (
-                                                index < currentStepIndex ? <CheckCircle2 className="w-6 h-6" /> : step.icon
+                                                index < currentStepIndex ? <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" /> : step.icon
                                             ) : (
                                                 <div className="w-2 h-2 rounded-full bg-white/20" />
                                             )}
                                         </div>
-                                        <div className="pt-2">
+                                        <div className="pt-1 sm:pt-2 flex-1">
                                             <h3 className={cn(
-                                                "font-black text-xl leading-tight transition-all uppercase tracking-tight",
+                                                "font-black text-lg sm:text-xl leading-tight transition-all uppercase tracking-tight",
                                                 isActive ? "text-white" : "text-white/20"
                                             )}>
                                                 {step.label}
                                             </h3>
                                             <p className={cn(
-                                                "text-xs font-bold mt-1 tracking-wide",
+                                                "text-[10px] sm:text-xs font-bold mt-1 tracking-wide",
                                                 isActive ? "text-white/50" : "text-white/10"
                                             )}>
                                                 {isActive ? step.time : 'Scheduled'}
                                             </p>
                                             {isCurrent && (
-                                                <div className="mt-4 bg-[#E67E22]/10 border border-[#E67E22]/20 px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.2em] inline-block text-[#E67E22] animate-pulse">
+                                                <div className="mt-3 sm:mt-4 bg-[#E67E22]/10 border border-[#E67E22]/20 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] inline-block text-[#E67E22] animate-pulse">
                                                     Status: {order.status}
                                                 </div>
                                             )}
@@ -138,60 +152,99 @@ export default function OrderTrackingPage() {
                     </div>
                 </div>
 
+                {/* Print Only Header for Receipt */}
+                <div className="hidden print:block mb-8 text-center pt-8 border-b-2 border-gray-100 pb-8">
+                    <h1 className="text-3xl font-black text-gray-900 tracking-tighter uppercase mb-2">Savan Eats</h1>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Official Trade Receipt</p>
+                    <div className="mt-6 flex justify-between text-left">
+                        <div>
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Order Ref</p>
+                            <p className="text-xl font-black text-gray-900">#{order.orderNumber}</p>
+                        </div>
+                        <div className="text-right">
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Date</p>
+                            <p className="text-xl font-black text-gray-900">{new Date(order.date).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Tracking Action Section */}
-                <div className="space-y-6">
-                    <div className="flex items-center justify-between p-8 bg-gray-50 rounded-[2.5rem] border border-gray-100 shadow-sm group">
-                        <div className="flex items-center gap-6">
-                            <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-[#E67E22] shadow-md group-hover:rotate-6 transition-transform">
-                                <Box className="w-8 h-8" />
+                <div className="space-y-6 print:hidden">
+                    <div className="flex items-center justify-between p-6 sm:p-8 bg-gray-50 rounded-[2.5rem] border border-gray-100 shadow-sm group">
+                        <div className="flex items-center gap-4 sm:gap-6">
+                            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center text-[#E67E22] shadow-md group-hover:rotate-6 transition-transform shrink-0">
+                                <Box className="w-7 h-7 sm:w-8 sm:h-8" />
                             </div>
                             <div>
-                                <h4 className="font-black text-2xl text-gray-900 tracking-tight">Order Tracking</h4>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Live Updates Hub</p>
+                                <h4 className="font-black text-xl sm:text-2xl text-gray-900 tracking-tight">Order Trading</h4>
+                                <p className="text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">In-Context Confirmation</p>
                             </div>
                         </div>
-                        <Button variant="ghost" size="icon" className="rounded-2xl w-12 h-12 bg-white shadow-sm border border-gray-100 hover:bg-[#E67E22]/10 transition-all">
-                            <ArrowLeft className="w-5 h-5 text-gray-400 rotate-180" />
+                        <Button
+                            onClick={handleShareWhatsApp}
+                            className="rounded-2xl w-12 h-12 bg-white shadow-sm border border-gray-100 hover:bg-[#E67E22]/10 transition-all p-0 flex items-center justify-center text-[#E67E22]"
+                        >
+                            <Share2 className="w-5 h-5" />
                         </Button>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-6">
-                        <Button className="flex-1 h-20 rounded-[2rem] bg-gray-900 hover:bg-black text-white font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-4 shadow-xl transition-all">
-                            <Phone className="w-5 h-5 text-[#E67E22]" />
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                        <Button className="flex-1 h-16 sm:h-20 rounded-[1.5rem] sm:rounded-[2rem] bg-gray-900 hover:bg-black text-white font-black uppercase tracking-wider text-[9px] sm:text-[10px] flex items-center justify-center gap-3 sm:gap-4 shadow-xl transition-all">
+                            <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[#E67E22]" />
                             Support Center
                         </Button>
-                        <Button variant="outline" className="flex-1 h-20 rounded-[2rem] border-2 border-gray-100 hover:bg-gray-50 font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-4 text-gray-600 transition-all">
-                            <Info className="w-5 h-5 text-gray-400" />
-                            Order Receipt
+                        <Button
+                            onClick={handlePrintReceipt}
+                            variant="outline"
+                            className="flex-1 h-16 sm:h-20 rounded-[1.5rem] sm:rounded-[2rem] border-2 border-gray-100 hover:bg-gray-50 font-black uppercase tracking-wider text-[9px] sm:text-[10px] flex items-center justify-center gap-3 sm:gap-4 text-gray-600 transition-all"
+                        >
+                            <Printer className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                            Evidence of Trade
                         </Button>
                     </div>
                 </div>
 
-                {/* Summary Section */}
-                <div className="mt-16 p-10 border border-gray-100 rounded-[3rem] bg-gray-50/50 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none">
+                {/* Summary Section - Optimized for Print & Mobile */}
+                <div className="mt-12 sm:mt-16 p-8 sm:p-10 border border-gray-100 rounded-[2.5rem] sm:rounded-[3rem] bg-gray-50/50 relative overflow-hidden print:bg-transparent print:border-none print:mt-4 print:p-0">
+                    <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none print:hidden">
                         <ChefHat className="w-32 h-32" />
                     </div>
-                    <h5 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-8">Order Summary</h5>
-                    <div className="space-y-6">
+                    <h5 className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-6 sm:mb-8 print:text-black print:text-sm">Order Selections</h5>
+                    <div className="space-y-4 sm:space-y-6">
                         {order.items.map(item => (
-                            <div key={item.id} className="flex justify-between items-center">
-                                <div className="flex items-center gap-4">
-                                    <span className="bg-white px-3 py-1.5 rounded-xl text-[10px] font-black text-[#E67E22] border border-gray-100 shadow-sm">{item.quantity}x</span>
-                                    <span className="text-gray-900 font-bold text-lg">{item.name}</span>
+                            <div key={item.id} className="flex justify-between items-center print:border-b print:border-dotted print:border-gray-200 print:pb-2">
+                                <div className="flex items-center gap-3 sm:gap-4">
+                                    <span className="bg-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[9px] sm:text-[10px] font-black text-[#E67E22] border border-gray-100 shadow-sm print:bg-transparent print:border-none print:text-black">{item.quantity}x</span>
+                                    <span className="text-gray-900 font-bold text-base sm:text-lg">{item.name}</span>
                                 </div>
-                                <span className="text-gray-900 font-black text-lg">KES {(item.price * item.quantity).toLocaleString()}</span>
+                                <span className="text-gray-900 font-black text-base sm:text-lg">KES {(item.price * item.quantity).toLocaleString()}</span>
                             </div>
                         ))}
                     </div>
-                    <div className="h-[1px] bg-gray-200/50 my-8" />
-                    <div className="flex justify-between items-end">
-                        <span className="text-gray-400 font-black uppercase text-[10px] tracking-widest">Settlement Amount</span>
-                        <span className="text-[#E67E22] text-4xl font-black tracking-tighter">KES {order.total.toLocaleString()}</span>
+                    <div className="h-[1px] bg-gray-200/50 my-6 sm:my-8 print:hidden" />
+                    <div className="flex justify-between items-end print:mt-12">
+                        <div className="print:hidden">
+                            <span className="text-gray-400 font-black uppercase text-[9px] sm:text-[10px] tracking-widest block mb-1">Total Trading Value</span>
+                            <span className="text-[#E67E22] text-3xl sm:text-4xl font-black tracking-tighter">KES {order.total.toLocaleString()}</span>
+                        </div>
+                        <div className="hidden print:block w-full">
+                            <div className="flex justify-between items-center border-t-2 border-black pt-4">
+                                <span className="text-xl font-black uppercase">Grand Total</span>
+                                <span className="text-2xl font-black text-gray-900">KES {order.total.toLocaleString()}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                {/* Print Footer */}
+                <div className="hidden print:block mt-16 text-center border-t border-gray-100 pt-8">
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.5em] mb-4">Thank you for dining with Savan</p>
+                    <p className="text-[8px] text-gray-300 font-medium">This is a system generated receipt. Digital ID: {order.id}</p>
+                </div>
             </main>
-            <BottomNav />
+            <div className="print:hidden">
+                <BottomNav />
+            </div>
         </div>
     )
 }

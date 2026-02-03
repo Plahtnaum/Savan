@@ -201,7 +201,7 @@ export default function CheckoutPage() {
                                 <button
                                     onClick={() => setPaymentMethod('mpesa')}
                                     className={cn(
-                                        "p-10 rounded-[2.5rem] border-2 transition-all duration-500 text-left relative overflow-hidden group h-full",
+                                        "p-6 sm:p-10 rounded-[2.5rem] border-2 transition-all duration-500 text-left relative overflow-hidden group h-full",
                                         paymentMethod === 'mpesa'
                                             ? "border-[#E67E22] bg-[#E67E22]/5 shadow-2xl shadow-[#E67E22]/10 scale-[1.02]"
                                             : "border-gray-100 hover:border-gray-300 bg-white"
@@ -224,7 +224,7 @@ export default function CheckoutPage() {
                                 <button
                                     onClick={() => setPaymentMethod('cash')}
                                     className={cn(
-                                        "p-10 rounded-[2.5rem] border-2 transition-all duration-500 text-left relative overflow-hidden group h-full",
+                                        "p-6 sm:p-10 rounded-[2.5rem] border-2 transition-all duration-500 text-left relative overflow-hidden group h-full",
                                         paymentMethod === 'cash'
                                             ? "border-gray-900 bg-gray-50 shadow-2xl scale-[1.02]"
                                             : "border-gray-100 hover:border-gray-300 bg-white"
@@ -260,8 +260,8 @@ export default function CheckoutPage() {
                     {/* Right: Summary Hub */}
                     <div className="lg:w-[450px]">
                         <div className="sticky top-32 space-y-10">
-                            <div className="bg-gray-900 rounded-[3rem] p-12 text-white shadow-[0_40px_100px_rgba(0,0,0,0.15)] relative overflow-hidden">
-                                <div className="relative z-10 space-y-16">
+                            <div className="bg-gray-900 rounded-[3rem] p-8 sm:p-12 text-white shadow-[0_40px_100px_rgba(0,0,0,0.15)] relative overflow-hidden">
+                                <div className="relative z-10 space-y-12 sm:space-y-16">
                                     <div className="flex items-center justify-between">
                                         <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Order Summation</h3>
                                         <Badge className="bg-white/10 text-white border-white/20 uppercase tracking-[0.3em] text-[9px] font-black h-8 px-4">{items.length} SELECTIONS</Badge>
@@ -279,13 +279,13 @@ export default function CheckoutPage() {
                                         <div className="pt-10 border-t border-white/10 flex justify-between items-end">
                                             <div className="space-y-2">
                                                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Grand Total</span>
-                                                <p className="text-6xl font-black tracking-tighter">KES {finalTotal.toLocaleString()}</p>
+                                                <p className="text-4xl sm:text-6xl font-black tracking-tighter">KES {finalTotal.toLocaleString()}</p>
                                             </div>
                                         </div>
                                     </div>
 
                                     <Button
-                                        className="w-full h-24 rounded-[2rem] bg-[#E67E22] hover:bg-white hover:text-black text-xl font-black transition-all duration-500 flex items-center justify-center gap-4 uppercase tracking-[0.3em] shadow-[0_30px_60px_rgba(230,126,34,0.4)] active:scale-95 disabled:bg-white/10 disabled:text-white/20 group border-none"
+                                        className="w-full h-20 sm:h-24 rounded-[1.5rem] sm:rounded-[2rem] bg-[#E67E22] hover:bg-white hover:text-black text-lg sm:text-xl font-black transition-all duration-500 flex items-center justify-center gap-4 uppercase tracking-[0.2em] sm:tracking-[0.3em] shadow-[0_30px_60px_rgba(230,126,34,0.4)] active:scale-95 disabled:bg-white/10 disabled:text-white/20 group border-none"
                                         onClick={handlePlaceOrder}
                                         disabled={loading || phoneNumber.length < 10}
                                     >
