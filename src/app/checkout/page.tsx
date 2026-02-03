@@ -30,7 +30,7 @@ export default function CheckoutPage() {
         // Simulate STK Push
         await new Promise(resolve => setTimeout(resolve, 2000))
 
-        const defaultAddress = user?.addresses.find(a => a.isDefault)?.street || user?.addresses[0]?.street
+        const defaultAddress = user?.addresses.find(a => a.isDefault)?.address || user?.addresses[0]?.address
 
         createOrder({
             items: [...items],
@@ -118,7 +118,7 @@ export default function CheckoutPage() {
                                     <div className="relative">
                                         <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
                                         <Input
-                                            defaultValue={user?.addresses.find(a => a.isDefault)?.street || user?.addresses[0]?.street}
+                                            defaultValue={user?.addresses.find(a => a.isDefault)?.address || user?.addresses[0]?.address}
                                             className="h-16 rounded-2xl bg-gray-50 border-gray-100 pl-16 pr-6 font-bold focus:ring-[#E67E22]"
                                         />
                                     </div>

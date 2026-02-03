@@ -1,11 +1,12 @@
-'use client'
-
+import React, { useState } from 'react'
 import { Header } from '@/components/layout/header'
 import { BottomNav } from '@/components/layout/bottom-nav'
 import { MenuItemCard } from '@/components/menu-item-card'
 import { Button } from '@/components/ui/button'
 import { ChevronRight, Search, Play, ArrowRight, Sparkles, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
+import { getMealContext } from '@/lib/meal-utils'
 
 const FEATURED_ITEMS = [
   {
@@ -50,51 +51,62 @@ const FEATURED_ITEMS = [
   }
 ]
 
+
 const CATEGORIES = [
-  { name: 'Breakfast', icon: '🍳' },
-  { name: 'Lunch', icon: '🍲' },
-  { name: 'Dinner', icon: '🍗' },
-  { name: 'Sides', icon: '🍟' },
-  { name: 'Drinks', icon: '🥤' }
+  { name: 'All Day', icon: '🌍', type: 'all' },
+  { name: 'Breakfast', icon: '🍳', type: 'breakfast' },
+  { name: 'Lunch', icon: '🍲', type: 'lunch' },
+  { name: 'Main Dish', icon: '🍗', type: 'main' },
+  { name: 'Desserts', icon: '🍰', type: 'dessert' }
 ]
 
 export default function HomePage() {
+  const meal = getMealContext()
+  const [activeCategory, setActiveCategory] = React.useState('all')
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
 
       <main className="pb-32">
-        {/* Adaptive Hero Section - Cinematic Layout */}
+        {/* Adaptive Hero Section - Cinematic Layout with Dynamic Spotlight */}
         <section className="relative h-[65vh] lg:h-[80vh] w-full overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=2400"
+              src={meal.type === 'breakfast'
+                ? "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=2400"
+                : meal.type === 'lunch'
+                  ? "https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=2400"
+                  : "https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?w=2400"
+              }
               className="w-full h-full object-cover scale-105"
-              alt="Delicious African Food"
+              alt="Cinematic African Dining"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent lg:via-black/20"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent lg:via-black/20"></div>
           </div>
 
           <div className="relative z-10 h-full container max-w-[1440px] px-4 sm:px-8 flex items-center">
             <div className="max-w-4xl text-left lg:pl-16">
-              <div className="inline-flex items-center gap-2 bg-[#E67E22]/20 backdrop-blur-2xl px-5 py-2.5 rounded-full border border-white/20 mb-10 animate-premium-fade shadow-xl">
-                <Sparkles className="w-5 h-5 text-[#E67E22]" />
-                <span className="text-white text-[11px] font-black uppercase tracking-[0.3em]">Signature Collection • 2026</span>
+              <div className="inline-flex items-center gap-3 bg-[#E67E22] px-5 py-2.5 rounded-full mb-10 animate-premium-fade shadow-2xl shadow-[#E67E22]/20">
+                <Sparkles className="w-5 h-5 text-white" />
+                <span className="text-white text-[11px] font-black uppercase tracking-[0.3em]">{meal.greeting} • Spotlight</span>
               </div>
 
               <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-white mb-10 leading-[0.85] tracking-tighter drop-shadow-2xl">
-                THE SOUL<br />
-                <span className="text-[#E67E22] inline-block mt-2">OF AFRICA.</span>
+                {meal.type === 'breakfast' ? 'RE-AWAKEN' : meal.type === 'lunch' ? 'FUEL THE' : 'CELEBRATE'}<br />
+                <span className="text-[#E67E22] inline-block mt-2">YOUR SOUL.</span>
               </h1>
 
-              <p className="text-xl md:text-2xl text-white/80 font-medium max-w-2xl mb-14 leading-relaxed tracking-tight drop-shadow-lg">
-                We craft authentic, world-class flavors delivered with the precision of modern tech. Freshly prepared, artfully presented, and dedicated to the heritage.
+              <p className="text-xl md:text-2xl text-white/90 font-medium max-w-2xl mb-14 leading-relaxed tracking-tight drop-shadow-lg">
+                {meal.description} Crafted with authentic African heritage and delivered with modern precision.
               </p>
 
               <div className="flex flex-wrap gap-8 items-center">
-                <Button size="lg" className="bg-[#E67E22] hover:bg-black text-white px-14 h-20 text-xl font-black rounded-3xl shadow-[0_20px_50px_rgba(230,126,34,0.3)] active:scale-95 transition-all duration-500 uppercase tracking-widest">
-                  Explore Menu
-                </Button>
+                <Link href="/menu">
+                  <Button size="lg" className="bg-[#E67E22] hover:bg-white hover:text-black text-white px-14 h-20 text-xl font-black rounded-3xl shadow-[0_20px_50px_rgba(230,126,34,0.3)] active:scale-95 transition-all duration-500 uppercase tracking-widest border-none">
+                    Explore Menu
+                  </Button>
+                </Link>
                 <button className="flex items-center gap-6 group">
                   <div className="w-20 h-20 rounded-full border-2 border-white/30 flex items-center justify-center text-white bg-white/5 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all duration-500 shadow-2xl">
                     <Play className="w-6 h-6 fill-current" />
@@ -112,36 +124,49 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Categories Section - Adaptive Grid */}
+        {/* Categories Section - High-Fidelity Categorization Hub */}
         <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-20">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
             <div>
-              <p className="text-[#E67E22] text-xs font-black uppercase tracking-widest mb-2">Curated selection</p>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Browse by Category</h2>
-            </div>
-            <div className="flex gap-2">
-              <div className="w-12 h-12 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors cursor-pointer">
-                <ChevronRight className="w-5 h-5 rotate-180" />
-              </div>
-              <div className="w-12 h-12 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors cursor-pointer">
-                <ChevronRight className="w-5 h-5" />
-              </div>
+              <p className="text-[#E67E22] text-xs font-black uppercase tracking-widest mb-2">Refined Discovery</p>
+              <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter">Categorization Hub</h2>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.name}
-                className="group p-8 rounded-[2.5rem] bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col items-center text-center"
-              >
-                <div className="text-5xl mb-6 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
-                  {cat.icon}
-                </div>
-                <h3 className="font-black text-gray-900 text-lg mb-1 tracking-tight">{cat.name}</h3>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Explore All</p>
-              </button>
-            ))}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            {CATEGORIES.map((cat) => {
+              const isActive = activeCategory === cat.type
+              return (
+                <button
+                  key={cat.name}
+                  onClick={() => setActiveCategory(cat.type)}
+                  className={cn(
+                    "group p-10 rounded-[3rem] transition-all duration-500 flex flex-col items-center text-center relative overflow-hidden border",
+                    isActive
+                      ? "bg-gray-900 border-gray-900 text-white shadow-2xl shadow-gray-200 -translate-y-2"
+                      : "bg-white border-gray-100 text-gray-900 hover:border-[#E67E22]/30 hover:shadow-xl"
+                  )}
+                >
+                  <div className={cn(
+                    "text-5xl mb-6 transform transition-transform duration-500",
+                    isActive ? "scale-110" : "group-hover:scale-110 group-hover:rotate-6"
+                  )}>
+                    {cat.icon}
+                  </div>
+                  <h3 className="font-black text-lg mb-1 tracking-tight">{cat.name}</h3>
+                  <p className={cn(
+                    "text-[10px] font-black uppercase tracking-widest",
+                    isActive ? "text-[#E67E22]" : "text-gray-400"
+                  )}>
+                    {isActive ? 'Currently Active' : 'Explore All'}
+                  </p>
+
+                  {isActive && (
+                    <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-[#E67E22] animate-pulse" />
+                  )}
+                </button>
+              )
+            })}
           </div>
         </section>
 

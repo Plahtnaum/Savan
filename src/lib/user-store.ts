@@ -4,14 +4,15 @@ import { persist } from 'zustand/middleware'
 export type User = {
     id: string
     name: string
+    email: string
     phone: string
     addresses: Address[]
 }
 
 export type Address = {
     id: string
-    label: string // Home, Office
-    street: string
+    title: string // Was label, now title to match high-fidelity UI
+    address: string // Was street, now address
     details?: string
     isDefault?: boolean
 }
@@ -35,10 +36,11 @@ export const useUserStore = create<UserState>()(
                 user: {
                     id: 'u1',
                     name: 'Oliver',
+                    email: 'oliver@savaneats.com',
                     phone,
                     addresses: [
-                        { id: 'a1', label: 'Office', street: 'Westlands, Delta Towers', isDefault: true },
-                        { id: 'a2', label: 'Home', street: 'Kilimani, Rose Ave' }
+                        { id: 'a1', title: 'Office', address: 'Westlands, Delta Towers', isDefault: true },
+                        { id: 'a2', title: 'Home', address: 'Kilimani, Rose Ave' }
                     ]
                 }
             }),

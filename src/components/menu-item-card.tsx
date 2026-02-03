@@ -4,6 +4,7 @@ import { Heart, Star } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import { useFavoritesStore } from '@/lib/favorites-store'
 
 interface MenuItemCardProps {
     id: string
@@ -24,7 +25,8 @@ export function MenuItemCard({
     image,
     rating = 4.8,
 }: MenuItemCardProps) {
-    const [isFavorite, setIsFavorite] = useState(false)
+    const { toggleFavorite, isFavorite } = useFavoritesStore()
+    const favorite = isFavorite(id)
 
     return (
         <div className="group cursor-pointer">
@@ -46,16 +48,14 @@ export function MenuItemCard({
                     <button
                         onClick={(e) => {
                             e.preventDefault()
-                            setIsFavorite(!isFavorite)
+                            toggleFavorite(id)
                         }}
                         className="absolute top-4 left-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all group/fav"
                     >
                         <Heart
                             className={cn(
-                                "w-5 h-5 transition-all",
-                                isFavorite
-                                    ? 'fill-[#E67E22] text-[#E67E22]'
-                                    : 'text-white'
+                                "w-5 h-5 transition-all text-white",
+                                favorite && 'fill-[#E67E22] text-[#E67E22]'
                             )}
                         />
                     </button>

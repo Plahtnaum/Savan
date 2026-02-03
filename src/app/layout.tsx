@@ -40,9 +40,7 @@ export default function RootLayout({
         className={`${inter.variable} ${poppins.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <div className="flex bg-white min-h-screen">
-          {/* SideNav is hidden on mobile/tablet, visible on LG+ */}
-          <SideNav />
-          <div className="flex-1 w-full lg:ml-72 transition-all duration-500">
+          <div className="flex-1 w-full transition-all duration-500">
             {children}
           </div>
         </div>
