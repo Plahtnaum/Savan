@@ -14,7 +14,7 @@ export function getMealContext(): MealContext {
         return {
             type: 'breakfast',
             greeting: 'Karibu! A Fresh Start',
-            description: 'Awaken your palette with the authentic flavors of a Kenyan morning—from spiced tea to artisanal mahamri.',
+            description: 'Awaken your palette with authentic Kenyan morning flavors—from spiced tea to artisanal mahamri.',
             accentColor: '#E67E22'
         }
     }
@@ -23,7 +23,7 @@ export function getMealContext(): MealContext {
         return {
             type: 'lunch',
             greeting: 'Jambo! Midday Feast',
-            description: 'The sun is high, and our kitchen is crafting the perfect Kenyan main—fresh, bold, and delivered with care.',
+            description: 'Fresh, bold Kenyan mains, slow-cooked and delivered with care for your midday journey.',
             accentColor: '#E67E22'
         }
     }
@@ -31,7 +31,7 @@ export function getMealContext(): MealContext {
     return {
         type: 'dinner',
         greeting: 'Evening Warmth',
-        description: 'Wind down with our most prized slow-cooked heritage dishes. A soulful end to your day, prepared with heart.',
+        description: 'Soulful heritage dishes, slow-cooked for a perfect evening feast. A heritage end to your day.',
         accentColor: '#E67E22'
     }
 }

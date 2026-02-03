@@ -72,7 +72,7 @@ export default function HomePage() {
 
       <main className="pb-32">
         {/* Adaptive Hero Section - Cinematic & Kenyan Focused */}
-        <section className="relative h-[65vh] lg:h-[85vh] w-full overflow-hidden">
+        <section className="relative h-[70vh] lg:h-[80vh] w-full overflow-hidden">
           <div className="absolute inset-0">
             <img
               src={meal.type === 'breakfast'
@@ -94,24 +94,24 @@ export default function HomePage() {
                 <span className="text-white text-[11px] font-black uppercase tracking-[0.4em]">{meal.greeting}</span>
               </div>
 
-              <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-black text-white mb-10 leading-[0.8] tracking-tighter drop-shadow-2xl">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 leading-[0.8] tracking-tighter drop-shadow-2xl">
                 FEAST ON<br />
                 <span className="text-[#E67E22] inline-block mt-4">HERITAGE.</span>
               </h1>
 
-              <p className="text-xl md:text-3xl text-white/95 font-medium max-w-2xl mb-14 leading-relaxed tracking-tight drop-shadow-xl">
-                {meal.description} From the Highland farms to the Swahili coast, delivered with precision and heart.
+              <p className="text-lg md:text-2xl text-white/95 font-medium max-w-xl mb-10 leading-relaxed tracking-tight drop-shadow-xl">
+                {meal.description}
               </p>
 
-              <div className="flex flex-wrap gap-10 items-center">
+              <div className="flex flex-wrap gap-6 items-center">
                 <Link href="/menu">
-                  <Button size="lg" className="bg-[#E67E22] hover:bg-white hover:text-black text-white px-16 h-24 text-2xl font-black rounded-[2rem] shadow-[0_30px_60px_rgba(230,126,34,0.4)] active:scale-95 transition-all duration-500 uppercase tracking-[0.2em] border-none">
-                    Explore Menu
+                  <Button size="lg" className="bg-[#E67E22] hover:bg-white hover:text-black text-white px-10 h-16 md:h-20 text-lg md:text-xl font-black rounded-2xl shadow-[0_20px_40px_rgba(230,126,34,0.3)] active:scale-95 transition-all duration-500 uppercase tracking-[0.2em] border-none">
+                    Order Your Feast
                   </Button>
                 </Link>
                 <Link href="/menu?category=Main%20Dishes">
-                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 h-24 px-12 rounded-[2rem] font-black text-xl transition-all uppercase tracking-widest leading-tight">
-                    Today's Specials
+                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 h-16 md:h-20 px-8 rounded-2xl font-black text-sm md:text-base transition-all uppercase tracking-widest leading-tight">
+                    Explore Flavors
                   </Button>
                 </Link>
               </div>

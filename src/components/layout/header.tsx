@@ -24,7 +24,7 @@ export function Header() {
     return (
         <>
             <header className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-2xl border-b border-gray-100/50 shadow-sm transition-all duration-500">
-                <div className="container max-w-[1440px] flex h-20 items-center justify-between px-6 sm:px-12">
+                <div className="container max-w-[1440px] flex h-16 md:h-20 items-center justify-between px-6 sm:px-12">
                     {/* Left: Section Title (Desktop) or Logo (Mobile) */}
                     <div className="flex items-center gap-6">
                         <Button
