@@ -55,16 +55,16 @@ const FEATURED_ITEMS = [
 
 
 const CATEGORIES = [
-  { name: 'All Day', icon: Globe, type: 'all' },
-  { name: 'Breakfast', icon: Coffee, type: 'breakfast' },
-  { name: 'Lunch', icon: Soup, type: 'lunch' },
-  { name: 'Main Dish', icon: Utensils, type: 'main' },
-  { name: 'Desserts', icon: CupSoda, type: 'dessert' }
+  { name: 'All', icon: Globe, type: 'All' },
+  { name: 'Breakfast', icon: Coffee, type: 'Breakfast Snacks' },
+  { name: 'Mains', icon: Utensils, type: 'Main Dishes' },
+  { name: 'Plain', icon: Soup, type: 'Plain Dishes' },
+  { name: 'Hot Drinks', icon: CupSoda, type: 'Hot Beverages' }
 ]
 
 export default function HomePage() {
   const meal = getMealContext()
-  const [activeCategory, setActiveCategory] = React.useState('all')
+  const [activeCategory, setActiveCategory] = React.useState('All')
 
   return (
     <div className="min-h-screen bg-white">
@@ -76,10 +76,10 @@ export default function HomePage() {
           <div className="absolute inset-0">
             <img
               src={meal.type === 'breakfast'
-                ? "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=2400"
+                ? "https://images.unsplash.com/photo-1544787210-2213d24265cc?w=2400" // Tea & Mandazi vibe
                 : meal.type === 'lunch'
-                  ? "https://images.unsplash.com/photo-1627042633145-b78996320a9a?w=2400" // Kenyan Pilau style
-                  : "https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?w=2400" // Nyama Choma vibe
+                  ? "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=2400" // Pilau feast
+                  : "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=2400" // Nyama Choma dinner
               }
               className="w-full h-full object-cover scale-105"
               alt="Authentic Kenyan Culinary Experience"
@@ -106,13 +106,14 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-10 items-center">
                 <Link href="/menu">
                   <Button size="lg" className="bg-[#E67E22] hover:bg-white hover:text-black text-white px-16 h-24 text-2xl font-black rounded-[2rem] shadow-[0_30px_60px_rgba(230,126,34,0.4)] active:scale-95 transition-all duration-500 uppercase tracking-[0.2em] border-none">
-                    View Menu
+                    Explore Menu
                   </Button>
                 </Link>
-                <div className="flex items-center gap-4 text-white/60">
-                  <HeartHandshake className="w-8 h-8 text-[#E67E22]" />
-                  <span className="text-sm font-black uppercase tracking-widest leading-tight">Crafted with <br /> Kenyan Hospitality</span>
-                </div>
+                <Link href="/menu?category=Main%20Dishes">
+                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 h-24 px-12 rounded-[2rem] font-black text-xl transition-all uppercase tracking-widest leading-tight">
+                    Today's Specials
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

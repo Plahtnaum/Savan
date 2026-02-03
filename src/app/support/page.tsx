@@ -8,7 +8,7 @@ import { HelpCircle, ChevronDown, Mail, Phone, MessageSquare, ExternalLink, Arro
 const FAQS = [
     {
         question: "How do you guarantee authentic African flavors?",
-        answer: "Every dish at Savan is crafted by master chefs who specialize in regional African cuisines. We source our spices directly from artisanal markets in Nairobi, Lagos, and Addis Ababa to ensure every bite is a true journey through the continent."
+        answer: "Every dish at Savan Restaurant is crafted using time-honored recipes. We source our ingredients fresh and cook every meal to order, just like the heritage kitchens that inspired us."
     },
     {
         question: "What is your typical delivery time?",
@@ -102,14 +102,14 @@ export default function SupportPage() {
                                     <ArrowRight className="w-5 h-5 text-gray-200 group-hover:text-[#E67E22] group-hover:translate-x-2 transition-all" />
                                 </a>
 
-                                <a href="tel:+254700000000" className="group p-8 bg-gray-50 rounded-[2.5rem] border border-gray-100 flex items-center justify-between hover:bg-white hover:shadow-2xl hover:border-[#E67E22]/20 transition-all">
+                                <a href="tel:0797698194" className="group p-8 bg-gray-50 rounded-[2.5rem] border border-gray-100 flex items-center justify-between hover:bg-white hover:shadow-2xl hover:border-[#E67E22]/20 transition-all">
                                     <div className="flex items-center gap-6">
                                         <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-gray-900 shadow-sm group-hover:bg-gray-900 group-hover:text-white transition-all">
                                             <Phone className="w-6 h-6" />
                                         </div>
                                         <div>
                                             <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Call Support</p>
-                                            <p className="text-lg font-black text-gray-900 tracking-tight">+254 700 000 000</p>
+                                            <p className="text-lg font-black text-gray-900 tracking-tight">0797 698 194</p>
                                         </div>
                                     </div>
                                     <ArrowRight className="w-5 h-5 text-gray-200 group-hover:text-gray-900 group-hover:translate-x-2 transition-all" />
