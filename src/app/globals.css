@@ -1,49 +1,76 @@
 @import "tailwindcss";
 
-@theme {
-  /* Primary Color: Burnt Orange (#E67E22) */
-  --color-primary-50: #FFF5EB;
-  --color-primary-100: #FFE6CC;
-  --color-primary-200: #FFCD99;
-  --color-primary-300: #FFB366;
-  --color-primary-400: #FF9A33;
-  --color-primary-500: #E67E22;
-  --color-primary-600: #D35400;
-  --color-primary-700: #A04000;
-  --color-primary-800: #6E2C00;
-  --color-primary-900: #3B1800;
+@config "../../tailwind.config.ts";
 
-  /* Semantic Neutrals */
-  --background: #FFFFFF;
-  --foreground: #1A1A1A;
-  --card: #FFFFFF;
-  --card-foreground: #1A1A1A;
-  --popover: #FFFFFF;
-  --popover-foreground: #1A1A1A;
-  --primary: #E67E22;
-  --primary-foreground: #FFFFFF;
-  --secondary: #F4F4F5;
-  --secondary-foreground: #18181B;
-  --muted: #F4F4F5;
-  --muted-foreground: #71717A;
-  --accent: #E67E22;
-  --accent-foreground: #FFFFFF;
-  --destructive: #EF4444;
-  --destructive-foreground: #FFFFFF;
-  --border: #E4E4E7;
-  --input: #E4E4E7;
-  --ring: #E67E22;
-  --radius: 0.75rem;
+@theme {
+  --color-primary: #E67E22;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #1A1A1A;
+  --color-secondary-foreground: #FFFFFF;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-poppins), Georgia, serif;
+
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
 }
 
 @layer base {
+
+  /* High-Fidelity Global Reset */
+  * {
+    @apply border-gray-100;
+  }
+
   body {
-    @apply bg-white text-gray-900 antialiased;
-    font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    @apply bg-white text-gray-900 antialiased overflow-x-hidden;
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-black tracking-tighter text-gray-900;
+    font-family: var(--font-serif);
+  }
+
+  /* Force rounding on all standard components if tailwind is failing */
+  .rounded-2xl {
+    border-radius: 1rem !important;
+  }
+
+  .rounded-3xl {
+    border-radius: 1.5rem !important;
+  }
+
+  .rounded-full {
+    border-radius: 9999px !important;
   }
 }
 
-/* Utilities */
+/* Premium Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-premium-fade {
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Scrollbar Hide Utility */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -53,6 +80,11 @@
   display: none;
 }
 
-.safe-area-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
+/* Layout Utilities */
+.container-premium {
+  @apply w-full max-w-[1440px] mx-auto px-6 lg:px-12;
+}
+
+.glass-premium {
+  @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl;
 }

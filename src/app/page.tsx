@@ -76,30 +76,30 @@ export default function HomePage() {
           </div>
 
           <div className="relative z-10 h-full container max-w-[1440px] px-4 sm:px-8 flex items-center">
-            <div className="max-w-3xl text-left lg:pl-12">
-              <div className="inline-flex items-center gap-2 bg-[#E67E22]/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 mb-8 animate-fade-in">
-                <Sparkles className="w-4 h-4 text-[#E67E22]" />
-                <span className="text-white text-[10px] font-black uppercase tracking-widest">Premium Culinary Experience</span>
+            <div className="max-w-4xl text-left lg:pl-16">
+              <div className="inline-flex items-center gap-2 bg-[#E67E22]/20 backdrop-blur-2xl px-5 py-2.5 rounded-full border border-white/20 mb-10 animate-premium-fade shadow-xl">
+                <Sparkles className="w-5 h-5 text-[#E67E22]" />
+                <span className="text-white text-[11px] font-black uppercase tracking-[0.3em]">Signature Collection • 2026</span>
               </div>
 
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 leading-[0.9] tracking-tighter">
+              <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-white mb-10 leading-[0.85] tracking-tighter drop-shadow-2xl">
                 THE SOUL<br />
-                <span className="text-[#E67E22]">OF AFRICA.</span>
+                <span className="text-[#E67E22] inline-block mt-2">OF AFRICA.</span>
               </h1>
 
-              <p className="text-lg md:text-xl text-white/70 font-medium max-w-xl mb-12 leading-relaxed">
-                Experience authentic, bold flavors delivered with the precision of modern tech. Freshly prepared, artfully presented.
+              <p className="text-xl md:text-2xl text-white/80 font-medium max-w-2xl mb-14 leading-relaxed tracking-tight drop-shadow-lg">
+                We craft authentic, world-class flavors delivered with the precision of modern tech. Freshly prepared, artfully presented, and dedicated to the heritage.
               </p>
 
-              <div className="flex flex-wrap gap-6 items-center">
-                <Button size="lg" className="bg-[#E67E22] hover:bg-[#D35400] text-white px-12 h-16 text-lg font-black rounded-2xl shadow-2xl shadow-[#E67E22]/30 active:scale-95 transition-all">
+              <div className="flex flex-wrap gap-8 items-center">
+                <Button size="lg" className="bg-[#E67E22] hover:bg-black text-white px-14 h-20 text-xl font-black rounded-3xl shadow-[0_20px_50px_rgba(230,126,34,0.3)] active:scale-95 transition-all duration-500 uppercase tracking-widest">
                   Explore Menu
                 </Button>
-                <button className="flex items-center gap-4 group">
-                  <div className="w-14 h-14 rounded-full border-2 border-white/20 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
-                    <Play className="w-5 h-5 fill-current" />
+                <button className="flex items-center gap-6 group">
+                  <div className="w-20 h-20 rounded-full border-2 border-white/30 flex items-center justify-center text-white bg-white/5 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all duration-500 shadow-2xl">
+                    <Play className="w-6 h-6 fill-current" />
                   </div>
-                  <span className="text-white font-bold tracking-tight">Watch Our Story</span>
+                  <span className="text-white font-black uppercase tracking-[0.2em] text-xs transition-colors group-hover:text-[#E67E22]">Watch Our Story</span>
                 </button>
               </div>
             </div>
@@ -133,7 +133,7 @@ export default function HomePage() {
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.name}
-                className="group p-8 rounded-[2.5rem] bg-gray-50 border border-gray-100 hover:bg-white hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col items-center text-center"
+                className="group p-8 rounded-[2.5rem] bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col items-center text-center"
               >
                 <div className="text-5xl mb-6 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
                   {cat.icon}
