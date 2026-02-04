@@ -15,22 +15,31 @@ import { cn } from '@/lib/utils'
 
 export default function CheckoutPage() {
     const router = useRouter()
-    const { items, getCartTotal, clearCart } = useCartStore()
+    const { items, getCartTotal, clearCart, orderType, setOrderType } = useCartStore()
     const { user } = useUserStore()
-    const { createOrder } = useOrderStore()
+    const { createOrder, orders } = useOrderStore()
 
     const [loading, setLoading] = useState(false)
     const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'cash'>('mpesa')
     const [phoneNumber, setPhoneNumber] = useState(user?.phone || '')
     const [orderGenerated, setOrderGenerated] = useState(false)
     const [tempOrderId, setTempOrderId] = useState('')
+    const [distributionMode, setDistributionMode] = useState<'individual' | 'combined'>('individual')
+    const [commonRecipient, setCommonRecipient] = useState('')
 
     const total = getCartTotal()
-    const deliveryFee = 150
+    const deliveryFee = orderType === 'delivery' ? 150 : 0
     const finalTotal = total + deliveryFee
 
+    const [deliveryInstructions, setDeliveryInstructions] = useState('')
+    const [customerName, setCustomerName] = useState(user?.firstName || '')
+
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value.replace(/\D/g, '') // Only numbers
+        let val = e.target.value.replace(/\D/g, '') // Only numbers
+        // Auto-correct local format to international
+        if (val.startsWith('0')) {
+            val = '254' + val.substring(1)
+        }
         setPhoneNumber(val)
     }
 
@@ -45,13 +54,20 @@ export default function CheckoutPage() {
 
         const defaultAddress = user?.addresses.find(a => a.isDefault)?.address || user?.addresses[0]?.address
 
+        const finalItems = distributionMode === 'combined'
+            ? items.map(item => ({ ...item, recipient: commonRecipient || user?.name || 'Main Order' }))
+            : items
+
         createOrder({
             id: newOrderId,
-            items: [...items],
+            items: finalItems,
             total: finalTotal,
-            address: defaultAddress || 'Current Location',
+            address: orderType === 'delivery' ? (defaultAddress || 'Current Location') : 'Savan Hub (Building)',
+            customerName,
+            deliveryInstructions: orderType === 'delivery' ? deliveryInstructions : '',
             paymentMethod,
-            customerPhone: phoneNumber
+            customerPhone: phoneNumber,
+            orderType
         })
 
         clearCart()
@@ -103,7 +119,7 @@ export default function CheckoutPage() {
 
             const shareData = {
                 title: 'Savan Eats Order Confirmation',
-                text: `Hello! My Savan Eats order is confirmed.\nRef: #${tempOrderId}\nTotal: KES ${finalTotal.toLocaleString()}\n\n*BATCH BREAKDOWN*:${breakdown}\n\nTrack progress here: ${window.location.origin}/order/${tempOrderId}`,
+                text: `Hello! My Savan Eats order is confirmed.\nRef: #${tempOrderId}\nRecipient: ${customerName}\nTotal: KES ${finalTotal.toLocaleString()}\nFulfillment: ${orderType === 'delivery' ? `Delivery to ${address}` : 'Pickup at Hub'}${orderType === 'delivery' && deliveryInstructions ? `\nInst: ${deliveryInstructions}` : ''}\n\n*BATCH BREAKDOWN*:${breakdown}\n\nTrack progress here: ${window.location.origin}/order/${tempOrderId}`,
                 url: `${window.location.origin}/order/${tempOrderId}`
             }
 
@@ -136,9 +152,42 @@ export default function CheckoutPage() {
                         <div className="text-center space-y-4">
                             <p className="text-gray-600 font-medium print:text-black text-lg">
                                 {paymentMethod === 'cash'
-                                    ? `Your feast is being prepared. Please have KES ${finalTotal.toLocaleString()} ready for our rider upon arrival.`
+                                    ? `Your feast is being prepared. Please have KES ${finalTotal.toLocaleString()} ready for our ${orderType === 'delivery' ? 'rider' : 'concierge'} upon arrival.`
                                     : `M-Pesa payment initiated. Please check your phone to confirm the transaction of KES ${finalTotal.toLocaleString()}.`}
                             </p>
+
+                            {paymentMethod === 'cash' && (
+                                <div className="inline-block bg-gray-900 text-white rounded-3xl p-8 mt-6 shadow-2xl animate-premium-fade">
+                                    <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-4 text-white/40">Release Verification Code</p>
+                                    <p className="text-6xl font-black tracking-[0.1em]">{orders.find(o => o.id === tempOrderId)?.verificationCode || '----'}</p>
+                                    <p className="text-[10px] font-bold mt-6 text-white/60">Show this to your {orderType === 'delivery' ? 'rider' : 'server'} to receive your food.</p>
+                                </div>
+                            )}
+
+                            {/* Logistics Summary for Success Page */}
+                            <div className="pt-8 grid grid-cols-2 gap-6 text-left border-t border-gray-100/50 mt-8">
+                                <div className="space-y-1">
+                                    <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">Fulfillment Mode</p>
+                                    <p className="text-sm font-black text-gray-900 uppercase tracking-tight">{orderType}</p>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">Customer</p>
+                                    <p className="text-sm font-black text-gray-900">{customerName}</p>
+                                </div>
+                                <div className="col-span-2 space-y-1">
+                                    <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">
+                                        {orderType === 'delivery' ? 'Delivery Address' : 'Collection Point'}
+                                    </p>
+                                    <p className="text-sm font-bold text-gray-700 leading-tight">
+                                        {orderType === 'delivery'
+                                            ? (user?.addresses.find(a => a.isDefault)?.address || user?.addresses[0]?.address || 'Current Location')
+                                            : 'Savan Eats Headquarters, Nairobi'}
+                                    </p>
+                                    {orderType === 'delivery' && deliveryInstructions && (
+                                        <p className="text-[10px] font-medium text-[#E67E22] italic mt-1">"{deliveryInstructions}"</p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
 
                         {/* Success Order Breakdown */}
@@ -249,14 +298,44 @@ export default function CheckoutPage() {
                                 <div className="w-14 h-14 bg-[#E67E22]/10 rounded-2xl flex items-center justify-center text-[#E67E22] shadow-sm">
                                     <Truck className="w-7 h-7" />
                                 </div>
-                                <h2 className="text-3xl font-black tracking-tight text-gray-900 uppercase">Delivery Logistics</h2>
+                                <h2 className="text-3xl font-black tracking-tight text-gray-900 uppercase">Logistics Mode</h2>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                {[
+                                    { id: 'delivery', label: 'Delivery', desc: 'To Your Door', fee: 'KES 150', icon: Truck },
+                                    { id: 'pickup', label: 'Pickup', desc: 'I\'ll come down', fee: 'FREE', icon: MapPin },
+                                    { id: 'dine-in', label: 'Dine-in', desc: 'Table Service', fee: 'FREE', icon: Utensils },
+                                ].map((mode) => (
+                                    <button
+                                        key={mode.id}
+                                        onClick={() => setOrderType(mode.id as any)}
+                                        className={cn(
+                                            "p-6 rounded-[2rem] border-2 transition-all duration-500 text-left relative overflow-hidden group",
+                                            orderType === mode.id
+                                                ? "border-[#E67E22] bg-[#E67E22]/5 shadow-xl scale-[1.02]"
+                                                : "border-gray-50 hover:border-gray-200 bg-white"
+                                        )}
+                                    >
+                                        <mode.icon className={cn("w-6 h-6 mb-4", orderType === mode.id ? "text-[#E67E22]" : "text-gray-300")} />
+                                        <h4 className="font-black text-lg text-gray-900 leading-none mb-1">{mode.label}</h4>
+                                        <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest">{mode.desc}</p>
+                                        <span className="absolute top-6 right-6 text-[8px] font-black text-[#E67E22] bg-white px-2 py-1 rounded-md shadow-sm border border-gray-50">{mode.fee}</span>
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Recipient Details</span>
+                                <div className="h-[1px] flex-1 bg-gray-100" />
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                 <div className="space-y-4">
                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Full Name</label>
                                     <Input
-                                        defaultValue={user?.name}
+                                        value={customerName}
+                                        onChange={(e) => setCustomerName(e.target.value)}
                                         placeholder="Enter your name"
                                         className="h-16 rounded-2xl bg-gray-50 border-gray-100 px-8 font-black text-gray-900 focus:ring-2 focus:ring-[#E67E22] focus:bg-white transition-all"
                                     />
@@ -277,17 +356,92 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
                                 <div className="md:col-span-2 space-y-4">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Destination Address</label>
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">
+                                        {orderType === 'delivery' ? 'Destination Address' : 'Savan Hub (Collection)'}
+                                    </label>
                                     <div className="relative">
                                         <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
                                         <Input
                                             disabled={true}
-                                            defaultValue={user?.addresses.find(a => a.isDefault)?.address || user?.addresses[0]?.address || "Current Location"}
+                                            value={orderType === 'delivery' ? (user?.addresses.find(a => a.isDefault)?.address || user?.addresses[0]?.address || "Current Location") : "Savan Eats Headquarters, Nairobi"}
                                             className="h-16 rounded-2xl bg-gray-50 border-gray-100 pl-16 pr-8 font-black text-gray-900"
                                         />
-                                        <button className="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-[#E67E22] uppercase tracking-widest hover:text-black transition-colors">Change</button>
+                                        {orderType === 'delivery' && (
+                                            <button className="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-[#E67E22] uppercase tracking-widest hover:text-black transition-colors">Change</button>
+                                        )}
                                     </div>
                                 </div>
+
+                                {orderType === 'delivery' && (
+                                    <div className="md:col-span-2 space-y-4 animate-premium-fade">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Delivery Instructions</label>
+                                        <div className="relative">
+                                            <Info className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
+                                            <Input
+                                                value={deliveryInstructions}
+                                                onChange={(e) => setDeliveryInstructions(e.target.value)}
+                                                placeholder="House No, Gate color, Office floor etc."
+                                                className="h-16 rounded-2xl bg-white border-gray-200 pl-16 pr-8 font-black text-gray-900 focus:ring-2 focus:ring-[#E67E22] transition-all"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Batch Strategy Selection */}
+                            <div className="space-y-8 pt-8">
+                                <div className="flex items-center gap-3">
+                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400">Distribution Strategy</span>
+                                    <div className="h-[1px] flex-1 bg-gray-100" />
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <button
+                                        onClick={() => setDistributionMode('individual')}
+                                        className={cn(
+                                            "flex flex-col gap-4 p-8 rounded-[2rem] border-2 transition-all text-left",
+                                            distributionMode === 'individual' ? "border-[#E67E22] bg-[#E67E22]/5" : "border-gray-50 bg-white"
+                                        )}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <Badge variant="outline" className="text-[10px] border-gray-100">Smart Batch</Badge>
+                                            <div className={cn("w-4 h-4 rounded-full border-2 flex items-center justify-center", distributionMode === 'individual' ? "border-[#E67E22]" : "border-gray-200")}>
+                                                {distributionMode === 'individual' && <div className="w-2 h-2 rounded-full bg-[#E67E22]" />}
+                                            </div>
+                                        </div>
+                                        <h4 className="font-black text-lg">Individual Labeled</h4>
+                                        <p className="text-[10px] text-gray-400 font-bold leading-relaxed uppercase tracking-widest">Maintain separate names for each item discovery.</p>
+                                    </button>
+
+                                    <button
+                                        onClick={() => setDistributionMode('combined')}
+                                        className={cn(
+                                            "flex flex-col gap-4 p-8 rounded-[2rem] border-2 transition-all text-left",
+                                            distributionMode === 'combined' ? "border-[#E67E22] bg-[#E67E22]/5" : "border-gray-50 bg-white"
+                                        )}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <Badge variant="outline" className="text-[10px] border-gray-100">Simple Batch</Badge>
+                                            <div className={cn("w-4 h-4 rounded-full border-2 flex items-center justify-center", distributionMode === 'combined' ? "border-[#E67E22]" : "border-gray-200")}>
+                                                {distributionMode === 'combined' && <div className="w-2 h-2 rounded-full bg-[#E67E22]" />}
+                                            </div>
+                                        </div>
+                                        <h4 className="font-black text-lg">Single Recipient</h4>
+                                        <p className="text-[10px] text-gray-400 font-bold leading-relaxed uppercase tracking-widest">Group everything under one name for simplicity.</p>
+                                    </button>
+                                </div>
+
+                                {distributionMode === 'combined' && (
+                                    <div className="space-y-4 animate-premium-fade">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Combine items for:</label>
+                                        <Input
+                                            value={commonRecipient}
+                                            onChange={(e) => setCommonRecipient(e.target.value)}
+                                            placeholder="e.g. Finance Hub, Team Alpha, etc."
+                                            className="h-16 rounded-2xl bg-white border-[#E67E22]/20 px-8 font-black text-gray-900 focus:ring-4 focus:ring-[#E67E22]/10 transition-all shadow-lg shadow-[#E67E22]/5"
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </section>
 
@@ -373,22 +527,15 @@ export default function CheckoutPage() {
                                     <div className="space-y-10">
                                         {/* Grouped Items Breakdown */}
                                         <div className="space-y-6">
-                                            {Object.entries(
-                                                items.reduce((acc, item) => {
-                                                    const name = item.recipient || 'Main Order'
-                                                    if (!acc[name]) acc[name] = []
-                                                    acc[name].push(item)
-                                                    return acc
-                                                }, {} as Record<string, typeof items>)
-                                            ).map(([recipient, groupItems]) => (
-                                                <div key={recipient} className="space-y-3">
+                                            {distributionMode === 'combined' ? (
+                                                <div className="space-y-3">
                                                     <div className="flex items-center gap-3">
                                                         <div className="h-[1px] flex-1 bg-white/10" />
-                                                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">{recipient}</span>
+                                                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">{commonRecipient || user?.name || 'Main Order'}</span>
                                                         <div className="h-[1px] flex-1 bg-white/10" />
                                                     </div>
                                                     <div className="space-y-2">
-                                                        {groupItems.map(item => (
+                                                        {items.map(item => (
                                                             <div key={item.id} className="flex justify-between items-center text-sm">
                                                                 <span className="text-white/60 font-bold">{item.quantity}x {item.name}</span>
                                                                 <span className="text-white font-black text-xs">KES {(item.price * item.quantity).toLocaleString()}</span>
@@ -396,7 +543,32 @@ export default function CheckoutPage() {
                                                         ))}
                                                     </div>
                                                 </div>
-                                            ))}
+                                            ) : (
+                                                Object.entries(
+                                                    items.reduce((acc, item) => {
+                                                        const name = item.recipient || 'Main Order'
+                                                        if (!acc[name]) acc[name] = []
+                                                        acc[name].push(item)
+                                                        return acc
+                                                    }, {} as Record<string, typeof items>)
+                                                ).map(([recipient, groupItems]) => (
+                                                    <div key={recipient} className="space-y-3">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="h-[1px] flex-1 bg-white/10" />
+                                                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">{recipient}</span>
+                                                            <div className="h-[1px] flex-1 bg-white/10" />
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            {groupItems.map(item => (
+                                                                <div key={item.id} className="flex justify-between items-center text-sm">
+                                                                    <span className="text-white/60 font-bold">{item.quantity}x {item.name}</span>
+                                                                    <span className="text-white font-black text-xs">KES {(item.price * item.quantity).toLocaleString()}</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
                                         </div>
 
                                         <div className="space-y-8 pt-8 border-t border-white/5">

@@ -14,9 +14,13 @@ export type Order = {
     address: string
     paymentMethod: string
     customerPhone?: string
+    customerName?: string
+    deliveryInstructions?: string
+    orderType: 'delivery' | 'pickup' | 'dine-in'
+    verificationCode?: string
 }
 
-interface CreateOrderData extends Omit<Order, 'id' | 'orderNumber' | 'date' | 'status'> {
+interface CreateOrderData extends Omit<Order, 'id' | 'orderNumber' | 'date' | 'status' | 'verificationCode'> {
     id?: string
 }
 
@@ -39,6 +43,7 @@ export const useOrderStore = create<OrderState>()(
                     orderNumber: orderData.id ? orderData.id.replace('SVN-', '') : `SV${Math.floor(10000 + Math.random() * 90000)}`,
                     date: new Date().toISOString(),
                     status: 'Placed',
+                    verificationCode: Math.floor(1000 + Math.random() * 9000).toString(),
                 }
                 return {
                     orders: [newOrder, ...state.orders],

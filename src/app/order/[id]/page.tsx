@@ -82,11 +82,16 @@ export default function OrderTrackingPage() {
         )
     }
 
-    const steps = [
+    const steps = order.orderType === 'delivery' ? [
         { status: 'Placed', label: 'Order Confirmed', time: 'Just Now', icon: <Package className="w-5 h-5" /> },
         { status: 'Preparing', label: 'In the Kitchen', time: 'Preparing', icon: <ChefHat className="w-5 h-5" /> },
         { status: 'Out for Delivery', label: 'Out for Delivery', time: 'On the Way', icon: <Bike className="w-5 h-5" /> },
         { status: 'Delivered', label: 'Delivered', time: 'Arrived', icon: <CheckCircle className="w-5 h-5" /> },
+    ] : [
+        { status: 'Placed', label: 'Order Confirmed', time: 'Just Now', icon: <Package className="w-5 h-5" /> },
+        { status: 'Preparing', label: 'In the Kitchen', time: 'Preparing', icon: <ChefHat className="w-5 h-5" /> },
+        { status: 'Out for Delivery', label: 'Ready for Collection', time: 'Ready', icon: <Info className="w-5 h-5" /> },
+        { status: 'Delivered', label: 'Served / Collected', time: 'Done', icon: <CheckCircle className="w-5 h-5" /> },
     ]
 
     const statusMap: Record<string, number> = {
@@ -122,12 +127,27 @@ export default function OrderTrackingPage() {
                     <div className="relative z-10">
                         <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12 sm:mb-16">
                             <div>
-                                <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2 print:text-gray-400">Tracking Order</p>
+                                <div className="flex items-center gap-3 mb-2">
+                                    <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.4em] print:text-gray-400">Tracking Order</p>
+                                    <span className="bg-[#E67E22] text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">{order.orderType}</span>
+                                </div>
                                 <h2 className="text-4xl sm:text-5xl font-black tracking-tighter truncate max-w-[200px] sm:max-w-none">#{order.orderNumber}</h2>
+                                {order.customerName && (
+                                    <p className="text-white/60 text-xs font-bold mt-2 uppercase tracking-widest leading-none">For: {order.customerName}</p>
+                                )}
+                                {order.orderType === 'delivery' && (
+                                    <div className="mt-4 pt-4 border-t border-white/5 space-y-1">
+                                        <p className="text-white/40 text-[9px] font-black uppercase tracking-widest leading-none">Delivering To</p>
+                                        <p className="text-xs font-bold text-white/80 leading-tight">{order.address}</p>
+                                        {order.deliveryInstructions && (
+                                            <p className="text-[10px] text-[#E67E22] font-black italic mt-1 uppercase tracking-tighter opacity-80">"{order.deliveryInstructions}"</p>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                             <div className="bg-white/5 backdrop-blur-md px-5 py-3 sm:px-6 sm:py-4 rounded-[1.5rem] sm:text-right border border-white/10 w-full sm:w-auto print:bg-gray-50 print:border-gray-100">
-                                <p className="text-white/40 text-[9px] font-black uppercase tracking-widest mb-1 print:text-gray-400">Estimated Arrival</p>
-                                <p className="text-xl sm:text-2xl font-black text-[#E67E22]">~ 25 Mins</p>
+                                <p className="text-white/40 text-[9px] font-black uppercase tracking-widest mb-1 print:text-gray-400">{order.orderType === 'delivery' ? 'Estimated Arrival' : 'Ready In'}</p>
+                                <p className="text-xl sm:text-2xl font-black text-[#E67E22]">~ {order.orderType === 'delivery' ? '25' : '15'} Mins</p>
                             </div>
                         </div>
 
@@ -177,6 +197,14 @@ export default function OrderTrackingPage() {
                                 )
                             })}
                         </div>
+
+                        {order.verificationCode && order.paymentMethod === 'cash' && (
+                            <div className="mt-12 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 flex flex-col items-center text-center animate-premium-fade">
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mb-4">Security Verification Code</p>
+                                <p className="text-6xl font-black tracking-[0.2em] text-[#E67E22]">{order.verificationCode}</p>
+                                <p className="text-[10px] font-bold mt-6 text-white/60">Provide this to the {order.orderType === 'delivery' ? 'rider' : 'server'} to confirm receipt.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
 

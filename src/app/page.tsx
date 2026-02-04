@@ -9,58 +9,21 @@ import { ChevronRight, Search, Play, ArrowRight, Sparkles, TrendingUp, Globe, Co
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { getMealContext } from '@/lib/meal-utils'
-
-const FEATURED_ITEMS = [
-  {
-    id: 'beef-fry',
-    name: 'Savory Beef Fry',
-    price: 450,
-    image: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800',
-    description: '1x • Medium Spicy',
-    tags: ['Popular'],
-    rating: 4.9,
-    prepTime: '25-30 min'
-  },
-  {
-    id: 'chicken-stew',
-    name: 'Chicken Stew',
-    price: 500,
-    image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=800',
-    description: '1x • Mild',
-    tags: ['Chef Special'],
-    rating: 4.7,
-    prepTime: '30-35 min'
-  },
-  {
-    id: 'pilau',
-    name: 'Swahili Pilau',
-    price: 350,
-    image: 'https://images.unsplash.com/photo-1516714435131-44d6b64dc6a2?w=800',
-    description: '1x • Regular',
-    tags: ['Bestseller'],
-    rating: 4.8,
-    prepTime: '20-25 min'
-  },
-  {
-    id: 'tilapia',
-    name: 'Wet Fry Tilapia',
-    price: 650,
-    image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800',
-    description: '1x • Tomato Gravy',
-    tags: ['Premium'],
-    rating: 4.9,
-    prepTime: '35-40 min'
-  }
-]
-
+import { MENU_ITEMS } from '@/lib/menu-data'
 
 const CATEGORIES = [
   { name: 'All', icon: Globe, type: 'All' },
   { name: 'Breakfast', icon: Coffee, type: 'Breakfast Snacks' },
   { name: 'Mains', icon: Utensils, type: 'Main Dishes' },
   { name: 'Plain', icon: Soup, type: 'Plain Dishes' },
-  { name: 'Hot Drinks', icon: CupSoda, type: 'Hot Beverages' }
+  { name: 'Specials', icon: Sparkles, type: 'Special Dishes' },
+  { name: 'Cold Drinks', icon: CupSoda, type: 'Cold Drinks' },
+  { name: 'Hot Drinks', icon: Coffee, type: 'Hot Beverages' }
 ]
+
+const FEATURED_ITEMS = MENU_ITEMS.filter(item =>
+  ['p1', 'b2', 'm1', 'm2', 'b7', 's1'].includes(item.id)
+)
 
 export default function HomePage() {
   const meal = getMealContext()
@@ -76,7 +39,7 @@ export default function HomePage() {
           <div className="absolute inset-0">
             <img
               src={meal.type === 'breakfast'
-                ? "https://images.unsplash.com/photo-1544787210-2213d24265cc?w=2400" // Tea & Mandazi vibe
+                ? "/images/hero-breakfast.png" // Tea & Mandazi vibe
                 : meal.type === 'lunch'
                   ? "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=2400" // Pilau feast
                   : "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=2400" // Nyama Choma dinner

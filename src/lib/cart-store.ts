@@ -18,17 +18,20 @@ export type CartItem = {
 
 interface CartState {
     items: CartItem[]
+    orderType: 'delivery' | 'pickup' | 'dine-in'
     addItem: (item: Omit<CartItem, 'id'>) => void
     removeItem: (id: string) => void
     updateQuantity: (id: string, quantity: number) => void
     clearCart: () => void
     getCartTotal: () => number
+    setOrderType: (type: 'delivery' | 'pickup' | 'dine-in') => void
 }
 
 export const useCartStore = create<CartState>()(
     persist(
         (set, get) => ({
             items: [],
+            orderType: 'delivery',
             addItem: (item) => set((state) => {
                 const existingItem = state.items.find(
                     (i) => i.menuItemId === item.menuItemId &&
@@ -62,7 +65,8 @@ export const useCartStore = create<CartState>()(
             getCartTotal: () => {
                 const state = get()
                 return state.items.reduce((total, item) => total + (item.price * item.quantity), 0)
-            }
+            },
+            setOrderType: (type) => set({ orderType: type })
         }),
         {
             name: 'savan-cart-storage',
