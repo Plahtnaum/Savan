@@ -30,6 +30,7 @@ export default function CheckoutPage() {
     const total = getCartTotal()
     const deliveryFee = orderType === 'delivery' ? 150 : 0
     const finalTotal = total + deliveryFee
+    const resolvedAddress = user?.addresses.find(a => a.isDefault)?.address || user?.addresses[0]?.address || 'Current Location'
 
     const [deliveryInstructions, setDeliveryInstructions] = useState('')
     const [customerName, setCustomerName] = useState(user?.name || '')
@@ -52,8 +53,6 @@ export default function CheckoutPage() {
         // Simulate Processing
         await new Promise(resolve => setTimeout(resolve, 2000))
 
-        const defaultAddress = user?.addresses.find(a => a.isDefault)?.address || user?.addresses[0]?.address
-
         const finalItems = distributionMode === 'combined'
             ? items.map(item => ({ ...item, recipient: commonRecipient || user?.name || 'Main Order' }))
             : items
@@ -62,7 +61,7 @@ export default function CheckoutPage() {
             id: newOrderId,
             items: finalItems,
             total: finalTotal,
-            address: orderType === 'delivery' ? (defaultAddress || 'Current Location') : 'Savan Hub (Building)',
+            address: orderType === 'delivery' ? resolvedAddress : 'Savan Hub (Building)',
             customerName,
             deliveryInstructions: orderType === 'delivery' ? deliveryInstructions : '',
             paymentMethod,
@@ -119,7 +118,7 @@ export default function CheckoutPage() {
 
             const shareData = {
                 title: 'Savan Eats Order Confirmation',
-                text: `Hello! My Savan Eats order is confirmed.\nRef: #${tempOrderId}\nRecipient: ${customerName}\nTotal: KES ${finalTotal.toLocaleString()}\nFulfillment: ${orderType === 'delivery' ? `Delivery to ${address}` : 'Pickup at Hub'}${orderType === 'delivery' && deliveryInstructions ? `\nInst: ${deliveryInstructions}` : ''}\n\n*BATCH BREAKDOWN*:${breakdown}\n\nTrack progress here: ${window.location.origin}/order/${tempOrderId}`,
+                text: `Hello! My Savan Eats order is confirmed.\nRef: #${tempOrderId}\nRecipient: ${customerName}\nTotal: KES ${finalTotal.toLocaleString()}\nFulfillment: ${orderType === 'delivery' ? `Delivery to ${resolvedAddress}` : 'Pickup at Hub'}${orderType === 'delivery' && deliveryInstructions ? `\nInst: ${deliveryInstructions}` : ''}\n\n*BATCH BREAKDOWN*:${breakdown}\n\nTrack progress here: ${window.location.origin}/order/${tempOrderId}`,
                 url: `${window.location.origin}/order/${tempOrderId}`
             }
 
