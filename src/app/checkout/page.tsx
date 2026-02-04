@@ -32,7 +32,7 @@ export default function CheckoutPage() {
     const finalTotal = total + deliveryFee
 
     const [deliveryInstructions, setDeliveryInstructions] = useState('')
-    const [customerName, setCustomerName] = useState(user?.firstName || '')
+    const [customerName, setCustomerName] = useState(user?.name || '')
 
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let val = e.target.value.replace(/\D/g, '') // Only numbers
